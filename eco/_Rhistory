@@ -1,0 +1,512 @@
+present.protocol
+sink()
+sink("embriology/эмбриология средние качественные длинный протокол.txt")
+present.long.tactic
+sink()
+sink("embriology/эмбриология средние качественные короткий протокол.txt")
+present.short.tactic
+sink()
+sink("embriology/эмбриология средние качественные 5, 6.txt")
+present.five.six
+sink()
+sink("embriology/эмбриология т-тест кисты.txt")
+t.test
+sink()
+sink("embriology/эмбриология т-тест протокол.txt")
+t.test.protocol
+sink()
+sink("embriology/эмбриология u-тест кисты.txt")
+wilcox
+sink()
+sink("embriology/эмбриология u-тест протокол.txt")
+wilcox.protocol
+sink()
+sink("embriology/эмбриология хи-квадрат кисты.txt")
+chisq.cyst
+sink()
+sink("embriology/эмбриология хи-квадрат протокол.txt")
+chisq.protocol
+sink()
+sink("embriology/средние значения по исходам длинного протокола.txt")
+for(i in 1:length(levels(women$long.tactic))){
+tmp <- subset(women, women$long.tactic == levels(women$long.tactic)[i])
+means <- lapply(tmp[5:28], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$long.tactic)[i]))
+print(means)
+}
+sink()
+sink("embriology/средние значения по исходам короткого протокола.txt")
+for(i in 1:length(levels(women$short.tactic))){
+tmp <- subset(women, women$short.tactic == levels(women$short.tactic)[i])
+means <- lapply(tmp[5:28], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$short.tactic)[i]))
+print(means)
+}
+sink()
+sink("embriology/средние значения по 5+6.txt")
+for(i in 1:length(levels(women$five.six))){
+tmp <- subset(women, women$five.six == levels(women$five.six)[i])
+means <- lapply(tmp[5:28], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$five.six)[i]))
+print(means)
+}
+sink()
+kruskal.test.long.tactic <- lapply(women[5:28], function(x) kruskal.test(x ~ women$long.tactic))
+oneway.test.long.tactic <- lapply(women[5:28], function(x) oneway.test(x ~ women$long.tactic))
+pairwise.prop.test.long.tactic <- lapply(women[29:32], function(x) pairwise.prop.test(table(women$long.tactic, x)))
+pairwise.wilcox.test.long.tactic <- lapply(women[5:28], function(x) pairwise.wilcox.test(x, women$long.tactic))
+pairwise.t.test.long.tactic <- lapply(women[5:28], function(x) pairwise.t.test(x, women$long.tactic))
+kruskal.test.short.tactic <- lapply(women[5:28], function(x) kruskal.test(x ~ women$short.tactic))
+oneway.test.short.tactic <- lapply(women[5:28], function(x) oneway.test(x ~ women$short.tactic))
+chisq.test.short.tactic <- lapply(women[29:32], function(x) ifelse(min(table(x)) < 5, paste(fisher.test(x, women$short.tactic)$method, ", p = ", fisher.test(x, women$short.tactic)$p.value), paste(chisq.test(x, women$short.tactic)$method, "p = ", chisq.test(x, women$short.tactic)$p.value)))
+pairwise.wilcox.test.short.tactic <- lapply(women[5:28], function(x) pairwise.wilcox.test(x, women$short.tactic))
+pairwise.t.test.short.tactic <- lapply(women[5:28], function(x) pairwise.t.test(x, women$short.tactic))
+kruskal.test.five.six <- lapply(women[5:28], function(x) kruskal.test(x ~ women$five.six))
+oneway.test.five.six <- lapply(women[5:28], function(x) oneway.test(x ~ women$five.six))
+chisq.test.five.six <- lapply(women[29:32], function(x) ifelse(min(table(x)) < 5, paste(fisher.test(x, women$five.six)$method, ", p = ", fisher.test(x, women$five.six)$p.value), paste(chisq.test(x, women$five.six)$method, "p = ", chisq.test(x, women$five.six)$p.value)))
+pairwise.wilcox.test.five.six <- lapply(women[5:28], function(x) pairwise.wilcox.test(x, women$five.six))
+pairwise.t.test.five.six <- lapply(women[5:28], function(x) pairwise.t.test(x, women$five.six))
+sink("embriology/исходы длинного протокола (Краскал-Уоллис).txt")
+kruskal.test.long.tactic
+sink()
+sink("embriology/исходы длинного протокола (попарное сравнение).txt")
+pairwise.wilcox.test.long.tactic
+sink()
+sink("embriology/исходы длинного протокола (Однофакторный дисперсионный).txt")
+oneway.test.long.tactic
+sink()
+sink("embriology/исходы длинного протокола (попарное сравнение т-тест).txt")
+pairwise.t.test.long.tactic
+sink()
+sink("embriology/исходы длинного протокола (попарное сравнение тест пропорций).txt")
+pairwise.prop.test.long.tactic
+sink()
+sink("embriology/исходы короткого протокола (Краскал-Уоллис).txt")
+kruskal.test.short.tactic
+sink()
+sink("embriology/исходы короткого протокола (попарное сравнение).txt")
+pairwise.wilcox.test.short.tactic
+sink()
+sink("embriology/исходы короткого протокола (Однофакторный дисперсионный).txt")
+oneway.test.short.tactic
+sink()
+sink("embriology/исходы короткого протокола (попарное сравнение т-тест).txt")
+pairwise.t.test.short.tactic
+sink()
+sink("embriology/исходы короткого протокола (хи-квадрат).txt")
+chisq.test.short.tactic
+sink()
+sink("embriology/исходы 5+6 (Краскал-Уоллис).txt")
+kruskal.test.five.six
+sink()
+sink("embriology/исходы 5+6 (попарное сравнение).txt")
+pairwise.wilcox.test.five.six
+sink()
+sink("embriology/исходы 5+6 (Однофакторный дисперсионный).txt")
+oneway.test.five.six
+sink()
+sink("embriology/исходы 5+6 (попарное сравнение т-тест).txt")
+pairwise.t.test.five.six
+sink()
+sink("embriology/исходы 5+6 (хи-квадрат).txt")
+chisq.test.five.six
+sink()
+for(i in 5:28){
+png(filename = paste('embriology/', gsub('\\.', ' ', names(women)[i]), ' кисты.png', sep=''));
+plot(women[,i] ~ women$Киста, xlab="Наличие кисты в протоколе", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('embriology/', gsub('\\.', ' ', names(women)[i]), ' протокол.png', sep=''));
+plot(women[,i] ~ women$Протокол, xlab="Протокол", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('embriology/', gsub('\\.', ' ', names(women)[i]), ' 3, 4, 5+6.png', sep=''))
+plot(women[,i] ~ women$long.tactic, xlab="", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+}
+system("soffice --headless --convert-to docx --outdir ./embriology ./embriology/*.txt")
+system("rm ./embriology/*.txt")
+system("zip -r ./embriology embriology")
+women <- read.csv('treatment.csv')
+women.cyst.not <- subset(women, women$Киста.есть.нет == "Нет")
+women.cyst.yes <- subset(women, women$Киста.есть.нет == "Да")
+women.short <- subset(women, women$Протокол == "Короткий")
+women.long <- subset(women, women$Протокол == "Длинный")
+women$long.tactic[women$номер.группы == 3] <- '1а1'
+women$long.tactic[women$номер.группы == 4] <- "1б1"
+women$long.tactic[women$номер.группы == 5] <- "1в"
+women$long.tactic[women$номер.группы == 6] <- "1в"
+women$long.tactic <- factor(women$long.tactic)
+women$short.tactic[women$номер.группы == 7] <- "1а2"
+women$short.tactic[women$номер.группы == 8] <- "1б2"
+women$short.tactic <- factor(women$short.tactic)
+women$five.six[women$номер.группы == 5] <- "1в1"
+women$five.six[women$номер.группы == 6] <- "1в2"
+women$five.six <- factor(women$five.six)
+women$pregnant[women$номер.группы <= 2] <- "Контрольная группа"
+women$pregnant[as.numeric(women$номер.группы) > 2 & women$Наступление.беременности.по.итогам.протокола == "Да"] <- "Беременность наступила"
+women$pregnant[as.numeric(women$номер.группы) > 2 & women$Наступление.беременности.по.итогам.протокола == "Нет"] <- "Беременность не наступила"
+women$pregnant <- factor(women$pregnant)
+sink("treatment/проверка нормальности распределения выборок.txt")
+print("Длинный протокол")
+for(i in 1:length(levels(women$long.tactic))){
+tmp <- subset(women, women$long.tactic == levels(women$long.tactic)[i])
+shapiros <- lapply(tmp[8:15], function(x) paste(ifelse(shapiro.test(x)$p.value > 0.05, "Нормальное распределение", ""), " Количество - ", sum(!is.na(x)), sep=''))
+print(paste("Группа", levels(women$long.tactic)[i], sep = " "))
+print(shapiros)
+}
+print("Короткий протокол")
+for(i in 1:length(levels(women$short.tactic))){
+tmp <- subset(women, women$short.tactic == levels(women$short.tactic)[i])
+shapiros <- lapply(tmp[8:15], function(x) paste(ifelse(shapiro.test(x)$p.value > 0.05, "Нормальное распределение", ""), " Количество - ", sum(!is.na(x)), sep=''))
+print(paste("Группа", levels(women$short.tactic)[i], sep = " "))
+print(shapiros)
+}
+print("Исход беременности")
+for(i in 1:length(levels(women$pregnant))){
+tmp <- subset(women, women$pregnant == levels(women$pregnant)[i])
+shapiros <- lapply(tmp[7:15], function(x) paste(ifelse(shapiro.test(x)$p.value > 0.05, "Нормальное распределение", ""), " Количество - ", sum(!is.na(x)), sep=''))
+print(paste("Группа", levels(women$pregnant)[i], sep = " "))
+print(shapiros)
+}
+sink()
+summary.count <- lapply(women[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+summary.count.cyst.not <- lapply(women.cyst.not[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+summary.count.cyst.yes <- lapply(women.cyst.yes[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+summary.count.short <- lapply(women.short[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+summary.count.long <- lapply(women.long[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+wilcox.cyst <- lapply(women[7:15], function(x) wilcox.test(x ~ women$Киста.есть.нет))
+t.test.cyst <- lapply(women[7:15], function(x) t.test(x ~ women$Киста.есть.нет))
+wilcox.protocol <- lapply(women[7:15], function(x) wilcox.test(x ~ women$Протокол))
+t.test.protocol <- lapply(women[7:15], function(x) t.test(x ~ women$Протокол))
+sink("treatment/лечение средние количественные.txt")
+summary.count
+sink()
+sink("treatment/лечение средние количественные без кист.txt")
+summary.count.cyst.not
+sink()
+sink("treatment/лечение средние количественные с кистами.txt")
+summary.count.cyst.yes
+sink()
+sink("treatment/лечение средние количественные короткий протокол.txt")
+summary.count.short
+sink()
+sink("treatment/лечение средние количественные длинный протокол.txt")
+summary.count.long
+sink()
+sink("treatment/лечение т-тест кисты.txt")
+t.test.cyst
+sink()
+sink("treatment/лечение т-тест протокол.txt")
+t.test.protocol
+sink()
+sink("treatment/лечение u-тест кисты.txt")
+wilcox.cyst
+sink()
+sink("treatment/лечение u-тест протокол.txt")
+wilcox.protocol
+sink()
+sink("treatment/средние значения по исходам длинного протокола.txt")
+for(i in 1:length(levels(women$long.tactic))){
+tmp <- subset(women, women$long.tactic == levels(women$long.tactic)[i])
+means <- lapply(tmp[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$long.tactic)[i]))
+print(means)
+}
+sink()
+sink("treatment/средние значения по исходам короткого протокола.txt")
+for(i in 1:length(levels(women$short.tactic))){
+tmp <- subset(women, women$short.tactic == levels(women$short.tactic)[i])
+means <- lapply(tmp[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$short.tactic)[i]))
+print(means)
+}
+sink()
+sink("treatment/средние значения по 5+6.txt")
+for(i in 1:length(levels(women$five.six))){
+tmp <- subset(women, women$five.six == levels(women$five.six)[i])
+means <- lapply(tmp[7:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+print(paste("Группа", levels(women$five.six)[i]))
+print(means)
+}
+sink()
+kruskal.test.long.tactic <- lapply(women[7:15], function(x) kruskal.test(x ~ women$long.tactic))
+oneway.test.long.tactic <- lapply(women[7:15], function(x) oneway.test(x ~ women$long.tactic))
+pairwise.wilcox.test.long.tactic <- lapply(women[7:15], function(x) pairwise.wilcox.test(x, women$long.tactic))
+pairwise.t.test.long.tactic <- lapply(women[7:15], function(x) pairwise.t.test(x, women$long.tactic))
+kruskal.test.short.tactic <- lapply(women[8:15], function(x) kruskal.test(x ~ women$short.tactic))
+oneway.test.short.tactic <- lapply(women[8:15], function(x) oneway.test(x ~ women$short.tactic))
+pairwise.wilcox.test.short.tactic <- lapply(women[8:15], function(x) pairwise.wilcox.test(x, women$short.tactic))
+pairwise.t.test.short.tactic <- lapply(women[8:15], function(x) pairwise.t.test(x, women$short.tactic))
+wilcox.test.five.six <- lapply(women[7:15], function(x) wilcox.test(x ~ women$five.six))
+t.test.five.six <- lapply(women[7:15], function(x) t.test(x ~ women$five.six))
+sink("treatment/исходы длинного протокола (Краскал-Уоллис).txt")
+kruskal.test.long.tactic
+sink()
+sink("treatment/исходы длинного протокола (попарное сравнение).txt")
+pairwise.wilcox.test.long.tactic
+sink()
+sink("treatment/исходы длинного протокола (Однофакторный дисперсионный).txt")
+oneway.test.long.tactic
+sink()
+sink("treatment/исходы длинного протокола (попарное сравнение т-тест).txt")
+pairwise.t.test.long.tactic
+sink()
+sink("treatment/исходы короткого протокола (Краскал-Уоллис).txt")
+kruskal.test.short.tactic
+sink()
+sink("treatment/исходы короткого протокола (попарное сравнение).txt")
+pairwise.wilcox.test.short.tactic
+sink()
+sink("treatment/исходы короткого протокола (Однофакторный дисперсионный).txt")
+oneway.test.short.tactic
+sink()
+sink("treatment/исходы короткого протокола (попарное сравнение т-тест).txt")
+pairwise.t.test.short.tactic
+sink()
+sink("treatment/лечение u-тест 5+6.txt")
+wilcox.test.five.six
+sink()
+sink("treatment/лечение t-тест 5+6.txt")
+t.test.five.six
+sink()
+for(i in 7:15){
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' кисты.png', sep=''))
+plot(women[,i] ~ women$Киста.есть.нет, xlab="Наличие кисты в протоколе", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' протокол.png', sep=''))
+plot(women[,i] ~ women$Протокол, xlab="Протокол", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' 3, 4, 5+6.png', sep=''))
+plot(women[,i] ~ women$long.tactic, xlab="", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' 5, 6.png', sep=''))
+plot(women[,i] ~ women$five.six, xlab="", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' беременность.png', sep=''), width = 480, height = 600)
+par(las = 2, mar = c(13.1, 5.1, 4.1, 2.1))
+plot(women[,i] ~ women$pregnant, xlab="", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+}
+for(i in 8:15){
+png(filename = paste('treatment/', gsub('\\.', ' ', names(women)[i]), ' 7, 8.png', sep=''))
+plot(women[,i] ~ women$short.tactic, xlab="", ylab=gsub('\\.', " ", names(women)[i]))
+dev.off()
+}
+system("soffice --headless --convert-to docx --outdir ./treatment ./treatment/*.txt")
+system("rm ./treatment/*.txt")
+system("zip -r ./treatment treatment")
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 1.5, cex.lab = 1.5)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 1.5, cex.lab = 1.5)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2, cex.lab = 2)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2.5, cex.lab = 2.5)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2, cex.lab = 2)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,5,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2, cex.lab = 2)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,7,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2, cex.lab = 2)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()
+d <- read.csv('prognoz.csv')
+d$киста.прошла <- factor(d$prognoz)
+d <- d[order(d$sum), ]
+fit.2 <- glm(prognoz ~ sum, data=d, family=binomial)
+png(filename = 'prognoz1.png', width = 1024, height = 768)
+plot(d$sum, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum2), ]
+fit.2 <- glm(prognoz ~ sum2, data=d, family=binomial)
+png(filename = 'prognoz2.png', width = 1024, height = 768)
+plot(d$sum2, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum2, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum3), ]
+fit.2 <- glm(prognoz ~ sum3, data=d, family=binomial)
+png(filename = 'prognoz3.png', width = 1024, height = 768)
+plot(d$sum3, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность, что киста пройдет")
+lines(d$sum3, predict(fit.2, type="response"))
+dev.off()
+d <- d[order(d$sum4), ]
+fit.2 <- glm(prognoz ~ sum4, data=d, family=binomial)
+png(filename = 'prognoz4.png', width = 1024, height = 768)
+par(mar=(c(5,6,5,2)))
+plot(d$sum4, predict(fit.2, type="response"), xlab = "Сумма баллов", ylab = "Вероятность регресса фолликулярной кисты", cex.axis = 2, cex.lab = 2)
+lines(d$sum4, predict(fit.2, type="response"))
+dev.off()

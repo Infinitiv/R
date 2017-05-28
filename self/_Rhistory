@@ -1,0 +1,10 @@
+library(epitools)
+self <- read.csv('self.csv')
+self$Дата <- strftime(self$Дата)
+self$week.year <- paste(as.week(self$Дата, sunday = F)$week, strftime(self$Дата, "%Y"), sep=(" "))
+self$month.year <- paste(sprintf("%02d", as.month(self$Дата)$mon), strftime(self$Дата, "%Y"), sep=(" "))
+self$week.year <- factor(self$week.year)
+self$month.year <- factor(self$month.year)
+levels(self$week.year)
+length(levels(self$week.year))
+length(levels(self$week.year))*50

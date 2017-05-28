@@ -1,0 +1,18 @@
+library('ggplot2')
+d <- read.csv("oxalat.csv")
+population.region3_15 <- 124056
+population.town3_15 <- 101869
+population.village3_15 <- 22187
+population.ivanovo1_15 <- 53800
+population.ivanovo1_18 <- 63700
+population.zone1 <- 48740
+population.zone2 <- 15000
+means <- tapply(d$доля.от.нормы, d$Пол, mean)
+se <- tapply(d$доля.от.нормы, d$Пол, function(x) sd(x)/sqrt(length(x)))
+df <- data.frame(means = means, sex = levels(d$Пол), se = se)
+ggplot(df, aes(y = means, x = sex, color = sex)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Пол") + ylab("Степень превышения нормального уровня экскреции оксалатов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.sex$method, "\n", ifelse(wilcox.test.sex$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.sex$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.sex$p.value, 4), sep = "")))))
+wilcox.test.sex <- wilcox.test(d$доля.от.нормы ~ d$Пол)
+means <- tapply(d$доля.от.нормы, d$Пол, mean)
+se <- tapply(d$доля.от.нормы, d$Пол, function(x) sd(x)/sqrt(length(x)))
+df <- data.frame(means = means, sex = levels(d$Пол), se = se)
+ggplot(df, aes(y = means, x = sex, color = sex)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Пол") + ylab("Степень превышения нормального уровня экскреции оксалатов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.sex$method, "\n", ifelse(wilcox.test.sex$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.sex$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.sex$p.value, 4), sep = "")))))

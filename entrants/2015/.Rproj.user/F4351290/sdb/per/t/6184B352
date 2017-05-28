@@ -1,0 +1,16 @@
+{
+    "contents" : "d <- read.csv('base.csv') \nfor(i in 1:length(d)){\n  d[i][d[i] == \"\"] <- NaN\n}\nd$target_speciality_id <- as.factor(d$target_speciality_id)\nd$target_organization_id <- as.factor(d$target_organization_id)\nd$nationality_type_id <- as.factor(d$nationality_type_id)\nd$region_id <- as.factor(d$region_id)\nd$gender_id <- as.factor(d$gender_id)\nd$identity_document_type_id <- as.factor(d$identity_document_type_id)\nd$identity_document_series <- as.factor(d$identity_document_series)\nd$identity_document_number <- as.factor(d$identity_document_number)\nd$education_document_type_id <- as.factor(d$education_document_type_id)\nd$education_document_series <- as.factor(d$education_document_series)\nd$education_document_number <- as.factor(d$education_document_number)\nfor(i in 1:18){\n  d[paste(\"X\", as.character(i), sep='')] <- as.factor(d[[paste(\"X\", as.character(i), sep='')]])\n}\nd[paste(\"X\", as.character(1), sep='')]\nd$summa <- d$chemistry + d$biology + d$russian\nd$summa_full <- ifelse(d$achievement == T, d$summa + 10, d$summa)\nd_competiton <- subset(d, d$chemistry >= 36 & d$biology >= 36 & d$russian >= 36 & is.na(d$last_deny_day))\nsummary(d_competiton)\nplot(table(d_competiton$))\nplot(table(d_competiton$registration_date))\n\nrd <- table(d$registration_date)\nod <- table(d$original_received_date)\nrd$type <- \"rd\"\ncbind(rd, od)\n",
+    "created" : 1438062057489.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2100492455",
+    "id" : "6184B352",
+    "lastKnownWriteTime" : 1437766556,
+    "path" : "~/R/entrants/2015/summary.R",
+    "project_path" : "summary.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

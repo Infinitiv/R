@@ -1,0 +1,456 @@
+y2015 <- read.csv('2015.csv')
+y2016 <- read.csv('2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+years <- c(y2015, y2016)
+for(year in 1:leght(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+for(year in 1:lenght(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+for(year in 1:length(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+years[0]
+y2015 <- read.csv('2015.csv')
+y2016 <- read.csv('2016.csv')
+for(year in 1:length(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+warnings()
+length(years)
+years <- list(y2015, y2016)
+length(years)
+for(year in 1:length(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+y2015 <- read.csv('2015.csv')
+y2016 <- read.csv('2016.csv')
+years <- list(y2015, y2016)
+for(year in 1:length(years)){
+for(i in 1:length(y2015)){
+years[year][i][years[year][i] == ""] <- NaN
+}
+}
+warnings()
+years[1][1] == ""
+years[1][1]
+years[1][1][1]
+years[1, 1]
+years[1, 2]
+years[1]
+years[1][[1]]
+years[1]
+years[1][[1]][1]
+for(year in 1:length(years)){
+for(i in 1:length(y2015)){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+}
+for(year in 1:length(years)){
+for(i in 1:length(years[year][[1]])){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+}
+for(year in 1:length(years)){
+for(i in 1:length(years[year][[1]])){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+years[year][[1]]$registration_date <- as.date(years[year][[1]]$registration_date)
+}
+for(year in 1:length(years)){
+for(i in 1:length(years[year][[1]])){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+years[year][[1]]$registration_date <- as.datetime(years[year][[1]]$registration_date)
+}
+summary(year2015)
+summary(y2015)
+for(year in 1:length(years)){
+for(i in 1:length(years[year][[1]])){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+years[year][[1]]$application_number <- as.factor(years[year][[1]]$application_number)
+}
+summary(y2015)
+summary(years[year][[1]])
+for(year in 1:length(years)){
+for(i in 1:length(years[year][[1]])){
+years[year][[1]][i][years[year][[1]][i] == ""] <- NaN
+}
+years[year][[1]]$application_number <- as.factor(years[year][[1]]$application_number)
+summary(years[year][[1]])
+}
+summary(y2015)
+summary(y2016)
+library('ggplot2')
+library('ggplot2')
+system("mkdir -p./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+library('ggplot2')
+system("mkdir -p ./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- с(sd(y2015$chemistry[y2015$chemistry > 36])/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37])/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36])/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37])/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+sd(y2016$chemistry[y2016$chemistry > 37])/sqrt(length(y2016$chemistry[y2016$chemistry > 37]))
+sd(y2016$chemistry[y2016$chemistry > 37])
+y2016$chemistry[y2016$chemistry > 37
+]
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36])/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c(2015, 2016)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = sex, color = sex)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Пол") + ylab("Степень превышения нормального уровня экскреции оксалатов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.sex$method, "\n", ifelse(wilcox.test.sex$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.sex$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.sex$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c(2015, 2016)
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = sex)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c(2015, 2016)
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+years <- levels(2015, 2016)
+years <- factor(2015, 2016)
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- factor(2015, 2016)
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- factor(2015, 2016)
+years <- levels(factor(2015, 2016))
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- levels(factor(2015, 2016))
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по биологии.png", width = 800, height = 800)
+means <- c(mean(y2015$biology[y2015$biology > 36], na.rm = T), mean(y2016$biology[y2016$biology > 37], na.rm = T))
+se <- c(sd(y2015$biology[y2015$biology > 36], na.rm = T)/sqrt(length(y2015$biology[y2015$biology > 36])), sd(y2016$biology[y2016$biology > 37], na.rm = T)/sqrt(length(y2016$biology[y2016$biology > 37])))
+years <- c("2015", "2016")
+wilcox.test.biology <- wilcox.test(y2015$biology[y2015$biology > 36], y2016$biology[y2016$biology > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.biology$method, "\n", ifelse(wilcox.test.biology$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.biology$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.biology$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по русскому языку.png", width = 800, height = 800)
+means <- c(mean(y2015$russian[y2015$russian > 36], na.rm = T), mean(y2016$russian[y2016$russian > 37], na.rm = T))
+se <- c(sd(y2015$russian[y2015$russian > 36], na.rm = T)/sqrt(length(y2015$russian[y2015$russian > 36])), sd(y2016$russian[y2016$russian > 37], na.rm = T)/sqrt(length(y2016$russian[y2016$russian > 37])))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015$russian[y2015$russian > 36], y2016$russian[y2016$russian > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+y2015$summa <- sum(y2015$chemistry, y2015$biology, y2015$russian)
+y2015$summa[y2015$chemistry > 36 & y2015$biology > 37 & y2015$russian > 37] <- sum(y2015$chemistry, y2015$biology, y2015$russian)
+y2016$summa[y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37] <- sum(y2016$chemistry, y2016$biology, y2016$russian)
+means <- c(mean(y2015$summa, na.rm = T), mean(y2016$summa, na.rm = T))
+y2016$summa[y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37] <- sum(y2016$chemistry, y2016$biology, y2016$russian)
+y2016$summa
+y2015$summa
+y2015$summa[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36] <- y2015$chemistry + y2015$biology + y2015$russian
+y2015$summa[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36] <- sum(y2015$chemistry[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36], y2015$biology[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36], y2015$russian[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36])
+y2015$summa <- sum(y2015$chemistry, y2015$biology, y2015$russian)
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2015$summa[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36] <- y2015$chemistry + y2015$biology + y2015$russian)
+y2015$summa[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36] <- y2015$chemistry + y2015$biology + y2015$russian
+sian
+y2016$summa <- sum(y2016$chemistry, y2016$biology, y2016$russian)
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+y
+y2015_competitiion <- y2015[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4]
+y2016_competitiion <- y2016[y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4]
+y2015_competitiion <- y2015[y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4]
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+library('ggplot2')
+system("mkdir -p ./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по биологии.png", width = 800, height = 800)
+means <- c(mean(y2015$biology[y2015$biology > 36], na.rm = T), mean(y2016$biology[y2016$biology > 37], na.rm = T))
+se <- c(sd(y2015$biology[y2015$biology > 36], na.rm = T)/sqrt(length(y2015$biology[y2015$biology > 36])), sd(y2016$biology[y2016$biology > 37], na.rm = T)/sqrt(length(y2016$biology[y2016$biology > 37])))
+years <- c("2015", "2016")
+wilcox.test.biology <- wilcox.test(y2015$biology[y2015$biology > 36], y2016$biology[y2016$biology > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.biology$method, "\n", ifelse(wilcox.test.biology$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.biology$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.biology$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по русскому языку.png", width = 800, height = 800)
+means <- c(mean(y2015$russian[y2015$russian > 36], na.rm = T), mean(y2016$russian[y2016$russian > 37], na.rm = T))
+se <- c(sd(y2015$russian[y2015$russian > 36], na.rm = T)/sqrt(length(y2015$russian[y2015$russian > 36])), sd(y2016$russian[y2016$russian > 37], na.rm = T)/sqrt(length(y2016$russian[y2016$russian > 37])))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015$russian[y2015$russian > 36], y2016$russian[y2016$russian > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+library('ggplot2')
+system("mkdir -p ./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по биологии.png", width = 800, height = 800)
+means <- c(mean(y2015$biology[y2015$biology > 36], na.rm = T), mean(y2016$biology[y2016$biology > 37], na.rm = T))
+se <- c(sd(y2015$biology[y2015$biology > 36], na.rm = T)/sqrt(length(y2015$biology[y2015$biology > 36])), sd(y2016$biology[y2016$biology > 37], na.rm = T)/sqrt(length(y2016$biology[y2016$biology > 37])))
+years <- c("2015", "2016")
+wilcox.test.biology <- wilcox.test(y2015$biology[y2015$biology > 36], y2016$biology[y2016$biology > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по биологии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.biology$method, "\n", ifelse(wilcox.test.biology$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.biology$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.biology$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по русскому языку.png", width = 800, height = 800)
+means <- c(mean(y2015$russian[y2015$russian > 36], na.rm = T), mean(y2016$russian[y2016$russian > 37], na.rm = T))
+se <- c(sd(y2015$russian[y2015$russian > 36], na.rm = T)/sqrt(length(y2015$russian[y2015$russian > 36])), sd(y2016$russian[y2016$russian > 37], na.rm = T)/sqrt(length(y2016$russian[y2016$russian > 37])))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015$russian[y2015$russian > 36], y2016$russian[y2016$russian > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Оценки по русскому языку\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/сумма баллов.png", width = 800, height = 800)
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015_competitiion$summa], y2016_competitiion$summa)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Суммы баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/сумма баллов.png", width = 800, height = 800)
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa], y2016_competitiion$summa)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Суммы баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.summa$method, "\n", ifelse(wilcox.test.summa$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.summa$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.summa$p.value, 4), sep = "")))))
+dev.off()
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa], y2016_competitiion$summa)
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa, y2016_competitiion$summa)
+png(filename = "output/сумма баллов.png", width = 800, height = 800)
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa, y2016_competitiion$summa)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Суммы баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.summa$method, "\n", ifelse(wilcox.test.summa$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.summa$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.summa$p.value, 4), sep = "")))))
+dev.off()
+library('ggplot2')
+system("mkdir -p ./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015$chemistry[y2015$chemistry > 36], na.rm = T), mean(y2016$chemistry[y2016$chemistry > 37], na.rm = T))
+se <- c(sd(y2015$chemistry[y2015$chemistry > 36], na.rm = T)/sqrt(length(y2015$chemistry[y2015$chemistry > 36])), sd(y2016$chemistry[y2016$chemistry > 37], na.rm = T)/sqrt(length(y2016$chemistry[y2016$chemistry > 37])))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015$chemistry[y2015$chemistry > 36], y2016$chemistry[y2016$chemistry > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по биологии.png", width = 800, height = 800)
+means <- c(mean(y2015$biology[y2015$biology > 36], na.rm = T), mean(y2016$biology[y2016$biology > 37], na.rm = T))
+se <- c(sd(y2015$biology[y2015$biology > 36], na.rm = T)/sqrt(length(y2015$biology[y2015$biology > 36])), sd(y2016$biology[y2016$biology > 37], na.rm = T)/sqrt(length(y2016$biology[y2016$biology > 37])))
+years <- c("2015", "2016")
+wilcox.test.biology <- wilcox.test(y2015$biology[y2015$biology > 36], y2016$biology[y2016$biology > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по биологии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.biology$method, "\n", ifelse(wilcox.test.biology$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.biology$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.biology$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по русскому языку.png", width = 800, height = 800)
+means <- c(mean(y2015$russian[y2015$russian > 36], na.rm = T), mean(y2016$russian[y2016$russian > 37], na.rm = T))
+se <- c(sd(y2015$russian[y2015$russian > 36], na.rm = T)/sqrt(length(y2015$russian[y2015$russian > 36])), sd(y2016$russian[y2016$russian > 37], na.rm = T)/sqrt(length(y2016$russian[y2016$russian > 37])))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015$russian[y2015$russian > 36], y2016$russian[y2016$russian > 37])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по русскому языку\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/сумма баллов.png", width = 800, height = 800)
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa, y2016_competitiion$summa)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Сумма баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.summa$method, "\n", ifelse(wilcox.test.summa$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.summa$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.summa$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$chemistry), mean(y2016_competitiion$chemistry))
+se <- c(sd(y2015_competitiion$chemistry)/sqrt(length(y2015_competitiion$chemistry)), sd(y2016_competitiion$chemistry)/sqrt(length(y2016_competitiion$chemistry)))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015_competitiion$chemistry, y2016_competitiion$chemistry)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+library('ggplot2')
+system("mkdir -p ./output")
+y2015 <- read.csv('./data/2015.csv')
+y2016 <- read.csv('./data/2016.csv')
+for(i in 1:length(y2015)){
+y2015[i][y2015[i] == ""] <- NaN
+}
+for(i in 1:length(y2016)){
+y2016[i][y2016[i] == ""] <- NaN
+}
+y2015$summa <- y2015$chemistry + y2015$biology + y2015$russian
+y2016$summa <- y2016$chemistry + y2016$biology + y2016$russian
+y2015_competitiion <- subset(y2015, y2015$chemistry > 36 & y2015$biology > 36 & y2015$russian > 36 & y2015$status_id == 4)
+y2016_competitiion <- subset(y2016, y2016$chemistry > 37 & y2016$biology > 37 & y2016$russian > 37 & y2016$status_id == 4)
+png(filename = "output/оценки по химии.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$chemistry), mean(y2016_competitiion$chemistry))
+se <- c(sd(y2015_competitiion$chemistry)/sqrt(length(y2015_competitiion$chemistry)), sd(y2016_competitiion$chemistry)/sqrt(length(y2016_competitiion$chemistry)))
+years <- c("2015", "2016")
+wilcox.test.chemistry <- wilcox.test(y2015_competitiion$chemistry, y2016_competitiion$chemistry)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.chemistry$method, "\n", ifelse(wilcox.test.chemistry$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.chemistry$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.chemistry$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по биологии.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$biology), mean(y2016_competitiion$biology))
+se <- c(sd(y2015_competitiion$biology)/sqrt(length(y2015_competitiion$biology)), sd(y2016_competitiion$biology)/sqrt(length(y2016_competitiion$biology)))
+years <- c("2015", "2016")
+wilcox.test.biology <- wilcox.test(y2015_competitiion$biology, y2016_competitiion$biology)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.biology$method, "\n", ifelse(wilcox.test.biology$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.biology$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.biology$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/оценки по русскому языку.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$russian), mean(y2016_competitiion$russian))
+se <- c(sd(y2015_competitiion$russian)/sqrt(length(y2015_competitiion$russian)), sd(y2016_competitiion$russian)/sqrt(length(y2016_competitiion$russian)))
+years <- c("2015", "2016")
+wilcox.test.russian <- wilcox.test(y2015_competitiion$russian, y2016_competitiion$russian)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Балл по химии\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.russian$method, "\n", ifelse(wilcox.test.russian$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.russian$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.russian$p.value, 4), sep = "")))))
+dev.off()
+png(filename = "output/сумма баллов.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$summa, na.rm = T), mean(y2016_competitiion$summa, na.rm = T))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa, y2016_competitiion$summa)
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Сумма баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.summa$method, "\n", ifelse(wilcox.test.summa$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.summa$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.summa$p.value, 4), sep = "")))))
+dev.off()
+mean(y2015_competitiion$summa[y2015_competitiion$achievement])
+mean(y2016_competitiion$summa[y2016_competitiion$achievement_att])
+length(y2015_competitiion$achievement])
+mean(y2015_competitiion$summa[y2015_competitiion$achievement == T])
+mean(y2016_competitiion$summa[y2016_competitiion$achievement_att == 1])
+lenght(y2016_competitiion$summa[y2016_competitiion$achievement_att == 1])
+length(y2016_competitiion$summa[y2016_competitiion$achievement_att == 1])
+lenght(y2015_competitiion$summa[y2015_competitiion$achievement == T])
+length(y2015_competitiion$summa[y2015_competitiion$achievement == T])
+means <- c(mean(y2015_competitiion$summa[y2015_competitiion$achievement]), mean(y2016_competitiion$summa[y2016_competitiion$achievement_att == 1]))
+png(filename = "output/сумма баллов абитуриентов с аттестатами с отличием.png", width = 800, height = 800)
+means <- c(mean(y2015_competitiion$summa[y2015_competitiion$achievement]), mean(y2016_competitiion$summa[y2016_competitiion$achievement_att == 1]))
+se <- c(sd(y2015_competitiion$summa, na.rm = T)/sqrt(length(y2015_competitiion$summa)), sd(y2016_competitiion$summa, na.rm = T)/sqrt(length(y2016_competitiion$summa)))
+years <- c("2015", "2016")
+wilcox.test.summa <- wilcox.test(y2015_competitiion$summa[y2015_competitiion$achievement], y2016_competitiion$summa[y2016_competitiion$achievement_att == 1])
+df <- data.frame(means = means, years = years, se = se)
+ggplot(df, aes(y = means, x = years, color = years)) + geom_errorbar(aes(ymin = means - 1.96*se, ymax = means + 1.96*se), width = 0.2, size = 2) + geom_point(size=5, shape=21, fill="white") + xlab("Годы") + ylab("Сумма баллов\n") + theme_bw() + theme(legend.position="none", text = element_text(size = 16), axis.text = element_text(size = 16), axis.title = element_text(size = 16)) + geom_text(label = paste("  ", round(means, 3), sep = ""), hjust = 0, color = "black") + ggtitle(paste(wilcox.test.summa$method, "\n", ifelse(wilcox.test.summa$p.value < 0.001, "p < 0.001", ifelse(wilcox.test.summa$p.value < 0.05, "p < 0.05", paste("p = ", round(wilcox.test.summa$p.value, 4), sep = "")))))
+dev.off()

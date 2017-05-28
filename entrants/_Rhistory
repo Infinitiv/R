@@ -1,0 +1,151 @@
+entrants <- read.csv('report.csv')
+entrants.lech <- subset(entrants, entrants$spec == 'Лечебное дело')
+entrants.stomat <- subset(entrants, entrants$spec == 'Стоматология')
+entrants$city <- factor(entrants$city)
+str(entrants)
+plot(entrants.lech ~ entrants$city)
+plot(entrants.lech$sum ~ entrants$city)
+entrants$city <- factor(entrants$city)
+entrants.lech <- subset(entrants, entrants$spec == 'Лечебное дело')
+entrants.ped <- subset(entrants, entrants$spec == 'Педиатрия')
+entrants.stomat <- subset(entrants, entrants$spec == 'Стоматология')
+plot(entrants.lech$sum ~ entrants$city)
+entrants <- read.csv('report.csv')
+entrants$city <- factor(entrants$city)
+entrants.lech <- subset(entrants, entrants$spec == 'Лечебное дело')
+entrants.ped <- subset(entrants, entrants$spec == 'Педиатрия')
+entrants.stomat <- subset(entrants, entrants$spec == 'Стоматология')
+plot(entrants.lech$sum ~ entrants$city)
+plot(entrants.lech$sum)
+u
+plot(entrants.lech$sum, entrants.lech$sum)
+plot(entrants.lech$sum)
+plot(entrants.lech$sum ~ entrants$city)
+dotchart(entrants.lech$sum ~ entrants$city)
+barplot(entrants.lech$sum ~ entrants$city)
+entrants <- read.csv('report.csv')
+entrants.lech <- subset(entrants, entrants$spec == 'Лечебное дело')
+entrants.ped <- subset(entrants, entrants$spec == 'Педиатрия')
+entrants.stomat <- subset(entrants, entrants$spec == 'Стоматология')
+barplot(entrants.lech$sum ~ entrants$city)
+plot(entrants.lech$sum ~ entrants$city)
+plot(entrants.lech$sum ~ entrants.lech$city)
+barplot(entrants.lech$sum ~ entrants.lech$city)
+plot(entrants.lech$sum ~ entrants.lech$city)
+plot(entrants.ped$sum ~ entrants.ped$city)
+entrants <- read.csv('report.csv')
+entrants$city <- factor(entrants$city)
+entrants$spec <- factor(entrants$spec)
+length(levels(entrants$spec)
+)
+entrants$city[entrants$spec == spec]
+entrants <- read.csv('report.csv')
+entrants$city <- factor(entrants$city)
+entrants$city[entrants$spec == spec]
+entrants$city[entrants$spec == "Лечебное дело"]
+table(entrants$city[entrants$spec == "Лечебное дело"])
+min(table(entrants$city[entrants$spec == "Лечебное дело"]))
+levels(entrants$city[entrants$spec == "Лечебное дело"]))
+levels(entrants$city[entrants$spec == "Лечебное дело"])
+subset(entrants, entrants$city == city & entrants$spec == spec)
+subset(entrants, entrants$city == "Иваново")
+t
+t
+t
+t
+entrants <- read.csv('report.csv')
+entrants$institute <- factor(entrants$institute)
+entrants$spec <- factor(entrants$spec)
+for(i in 1:length(levels(entrants$spec))){
+spec <- levels(entrants$spec)[i]
+png(filename = paste(spec, '.png', sep=''))
+min.count <- min(table(entrants$institute[entrants$spec == spec]))
+plot(entrants$sum[entrants$spec == spec] ~ entrants$institute[entrants$spec == spec], xlab = "ВУЗ", ylab = "Сумма баллов")
+dev.off()
+}
+sink('ranks.txt')
+institute <- "ИвГМА"
+for(j in 1:lentgh(levels(entrants$spec[entrants$institute == institute))){
+for(j in 1:length(levels(entrants$spec[entrants$institute == institute))){
+for(j in 1:length(levels(entrants$spec[entrants$institute == institute))){
+for(j in 1:length(levels(entrants$spec[entrants$institute == institute]))){
+spec <- levels(entrants$spec[entrants$institute == institute])[j]
+institute.count <- length(levels(entrants$institute[entrants$spec == spec]))
+institute.rank <- institute.count
+entrants.institute.sum <- entrants$sum[entrants$institute == institute & entrants$spec == spec]
+entrants.not.institute.names <- entrants$institute[entrants$institute != institute & entrants$spec == spec]
+for(i in 1:length(levels(entrants.not.institute.names))){
+entrants.current.institute.sum <- entrants$sum[entrants$institute == levels(entrants.not.institute.names)[i] & entrants$spec == spec]
+ifelse(length(entrants.institute.sum) > length(entrants.current.institute.sum), spec.count <- length(entrants.current.institute.sum), spec.count <- length(entrants.institute.sum))
+ifelse(min(head(entrants.current.institute.sum, spec.count)) < min(head(entrants.institute.sum, spec.count)), institute.rank <- institute.rank - 1, institute.rank <- institute.rank)
+}
+cat(paste(institute, spec, "- место", institute.rank, "из", institute.count, sep = " "))
+cat('\n')
+}
+sink()
+institute <- "ИвГМА"
+entrants <- read.csv('report.csv')
+entrants$institute <- factor(entrants$institute)
+entrants$spec <- factor(entrants$spec)
+median(entrants$sum[entrants$spec == spec])
+median(entrants$sum[entrants$spec == spec & entrants$institute == institute])
+for(i in 1:length(levels(entrants$spec))){
+spec <- levels(entrants$spec)[i]
+png(filename = paste(spec, '.png', sep=''), width = 800)
+par(las = 2, mar = c(8.1, 5.1, 4.1, 2.1))
+min.count <- min(table(entrants$institute[entrants$spec == spec]))
+plot(entrants$sum[entrants$spec == spec] ~ entrants$institute[entrants$spec == spec], xlab = "", ylab = "Сумма баллов")
+abline(h = median(entrants$sum[entrants$spec == spec & entrants$institute == institute])
+dev.off()
+?abline
+help(abline)
+entrants <- read.csv('report.csv')
+entrants$institute <- factor(entrants$institute)
+entrants$spec <- factor(entrants$spec)
+for(i in 1:length(levels(entrants$institute))){
+institute <- levels(entrants$institute)[i]
+means <- by(entrants$sum[entrants$institute == institute], entrants$spec[entrants$institute == institute], mean)
+medians <- by(entrants$sum[entrants$institute == institute], entrants$spec[entrants$institute == institute], median)
+mins <- by(entrants$sum[entrants$institute == institute], entrants$spec[entrants$institute == institute], min)
+png(filename = paste(institute, '.png', sep=''))
+par(mar = c(4.1, 5.1, 4.1, 2.1))
+plot(entrants$sum[entrants$institute == institute] ~ entrants$spec[entrants$institute == institute], xlab = "", ylab = "Сумма баллов", main = institute)
+points(1:length(means), means, pch = 23, cex = 0.75, bg = "red")
+points(1:length(mins), mins, pch = 1, cex = 0.75, bg = "blue")
+text(1:length(means), medians, labels = formatC(means, format = "f", digits = 1), pos = 3, cex = 0.9, col = "red")
+text(1:length(mins), mins, labels = mins, pos = 1, cex = 0.9, col = "blue")
+dev.off()
+}
+institute <- "ИвГМА"
+for(i in 1:length(levels(entrants$spec))){
+spec <- levels(entrants$spec)[i]
+means <- by(entrants$sum[entrants$spec == spec], entrants$institute[entrants$spec == spec], mean)
+medians <- by(entrants$sum[entrants$spec == spec], entrants$institute[entrants$spec == spec], median)
+mins <- by(entrants$sum[entrants$spec == spec], entrants$institute[entrants$spec == spec], min)
+medians
+png(filename = paste(spec, '.png', sep=''), width = 2000, height = 800)
+par(las = 2, mar = c(12.1, 5.1, 4.1, 2.1))
+min.count <- min(table(entrants$institute[entrants$spec == spec]))
+plot(entrants$sum[entrants$spec == spec] ~ entrants$institute[entrants$spec == spec], xlab = "", ylab = "Сумма баллов", main = spec)
+points(1:length(means), means, pch = 23, cex = 0.75, bg = "red")
+points(1:length(mins), mins, pch = 1, cex = 0.75, bg = "blue")
+text(1:length(means), medians + 2, labels = formatC(means, format = "f", digits = 1), pos = 3, cex = 0.9, col = "red")
+text(1:length(mins), mins, labels = mins, pos = 1, cex = 0.9, col = "blue")
+abline(h = median(entrants$sum[entrants$spec == spec & entrants$institute == institute]), lty = 2)
+abline(h = median(medians), lty = 2, col = "red")
+dev.off()
+}
+medians
+median(medians)
+median(medians, rm.na = T)
+median(medians, na.rm = T)
+women <- read.csv('clinic.csv')
+women <- read.csv('clinic.csv')
+medians
+order(medians)
+class(medians)
+str(medians)
+names(medians)
+names(order(medians))
+names(sort(medians))
+medians$ТГМУ

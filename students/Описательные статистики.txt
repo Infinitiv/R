@@ -1,0 +1,56 @@
+[1] "1 курс, лечебный"
+
+$mean
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  46.00   67.89   74.09   73.17   79.78   91.14 
+
+$count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   40.00   43.00   41.08   46.00   56.00 
+
+$sum
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    130     222     238     230     246     288       1 
+
+[1] "1 курс, педиатрический"
+
+$mean
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  54.80   66.78   71.21   71.17   75.77   86.14 
+
+$count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  13.00   30.00   36.00   34.64   39.00   52.00 
+
+$sum
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  151.0   201.0   220.5   213.5   229.0   249.0       3 
+
+[1] "2 курс, лечебный"
+
+$mean
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  50.00   65.52   70.16   70.29   75.84   88.15 
+
+$count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   25.00   29.00   27.97   32.00   41.00 
+
+$sum
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  149.0   222.0   232.0   230.3   244.0   300.0       3 
+
+[1] "2 курс, педиатрический"
+
+$mean
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  54.25   61.80   67.54   67.57   72.94   85.08 
+
+$count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   4.00   26.00   33.00   30.73   37.00   43.00 
+
+$sum
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  140.0   200.0   207.0   207.6   216.0   266.0       2 
+
