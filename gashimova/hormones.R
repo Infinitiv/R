@@ -1,5 +1,5 @@
 a <- 0.05
-d <- read.csv("hormones.csv") 
+d <- read.csv("data/hormones.csv") 
 d.first <- subset(d, d$group == 1)
 d.second <- subset(d, d$group == 2)
 
