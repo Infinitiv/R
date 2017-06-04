@@ -1,10 +1,10 @@
 a <- 0.05
-d <- read.csv("lakk.csv", check.names = F) 
+d <- read.csv("../data/gashimova/lakk.csv", check.names = F) 
 d.first <- subset(d, d$group == 1)
 d.second <- subset(d, d$group == 2)
 
-summary.count.first <- lapply(d.first[3:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
-summary.count.second <- lapply(d.second[3:15], function(x) paste(round(mean(x, na.rm=T), 4), "±", round(sd(x, na.rm=T)/sqrt(length(x[is.na(x)==F])), 4), sep=''))
+summary.count.first <- lapply(d.first[3:15], function(x) paste(round(median(x, na.rm=T), 4), " (", quantile(x, 0.25, na.rm = T), "-", quantile(x, 0.75, na.rm = T),")", sep=''))
+summary.count.second <- lapply(d.second[3:15], function(x) paste(round(median(x, na.rm=T), 4), " (", quantile(x, 0.25, na.rm = T), "-", quantile(x, 0.75, na.rm = T),")", sep=''))
 
 sink("lakk/сравнение показателей.txt")
 for(i in 3:15){
@@ -23,9 +23,9 @@ for(i in 3:15){
     cat("\r\n")
     cat(paste("Метод", comparsion$method, sep = ' - '))
     cat("\r\n")
-    cat(paste("Среднее значение и ошибка в группе 1", summary.count.first[title], sep = " = "))
+    cat(paste("Медиана и 25%-75% квартили в группе 1", summary.count.first[title], sep = " = "))
     cat("\r\n")
-    cat(paste("Среднее значение и ошибка в группе 2", summary.count.second[title], sep = " = "))
+    cat(paste("Медиана и 25%-75% квартили в группе 2", summary.count.second[title], sep = " = "))
     cat("\r\n")
     cat(paste("Значение p", round(comparsion$p.value, 6), sep = ' = '))
     cat("\r\n")
