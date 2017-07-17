@@ -1,7 +1,7 @@
 a <- 0.05
-d <- read.csv("../data/abdullaeva/blood.csv", check.names = F)
+d <- read.csv("../data/abdullaeva/peritoneum.csv", check.names = F)
 
-sink("blood/кровь.txt")
+sink("peritoneum/перитонеальная жидкость.txt")
 for(i in 4:length(names(d))){
   n <- tapply(d[,i], d$Группа, shapiro.test)
   medians <- tapply(d[,i], d$Группа, function(x) paste(round(median(x, na.rm=T), 4), " (", quantile(x, 0.25, na.rm = T), "-", quantile(x, 0.75, na.rm = T),")", sep=''))
