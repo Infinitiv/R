@@ -7,14 +7,14 @@ for(i in 20:28){
   d[,i][d[,i] < median] <- paste("до ", median, sep = '')
   d[,i][d[,i] != paste("до ", median, sep = '')] <- paste(median, " или больше", sep = '')
 }
-for(i in 1:29){
+for(i in 1:32){
   d[,i] <- as.factor(d[,i])
 }
 d.first <- subset(d, d$group == 1)
 d.second <- subset(d, d$group == 2)
 
 sink("common/сравнение показателей.txt")
-for(i in 3:29){
+for(i in 3:33){
   title <- names(d)[i]
   count.first <- as.list(table(d.first[,i]))
   percent.first <- as.list(round(table(d.first[,i])*100/length(d.first[,1]), 2))
