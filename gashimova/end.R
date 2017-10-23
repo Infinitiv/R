@@ -16,6 +16,7 @@ for(i in 3:11){
   else {
     comparsion <- wilcox.test(d[,i] ~ d$group, paired = F)
   }
+  spearman <- cor.test(d[,3], d[,i], method = 'spearman')
 
     cat(paste("Показатель", title, sep = ' - '))
     cat("\r\n")
@@ -28,6 +29,8 @@ for(i in 3:11){
     cat(paste("Медиана и 25%-75% квартили в группе 2", summary.count.second[title], sep = " = "))
     cat("\r\n")
     cat(paste("Значение p", round(comparsion$p.value, 6), sep = ' = '))
+    cat("\r\n")
+    cat(paste("Корреляция с уровнем гистамина r", spearman$statistic, sep = " = "))
     cat("\r\n")
     cat("\r\n")
 }
