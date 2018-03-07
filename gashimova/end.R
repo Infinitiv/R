@@ -16,7 +16,6 @@ for(i in 3:11){
   else {
     comparsion <- wilcox.test(d[,i] ~ d$group, paired = F)
   }
-
     cat(paste("Показатель", title, sep = ' - '))
     cat("\r\n")
     cat(paste("Нормальность распределения", ifelse(normality, "да", "нет"),sep = " - "))
@@ -28,6 +27,13 @@ for(i in 3:11){
     cat(paste("Медиана и 25%-75% квартили в группе 2", summary.count.second[title], sep = " = "))
     cat("\r\n")
     cat(paste("Значение p", round(comparsion$p.value, 6), sep = ' = '))
+    cat("\r\n")
+    for(j in 3:11){
+      spearman <- cor.test(d[,j], d[,i], method = 'spearman')
+      spearman.p.value <- ifelse(spearman$p.value < 0.05, "p < 0.05", paste("p = ", round(spearman$p.value, 4), sep = ''))
+      cat(paste("Корреляция между ", title, " и ", names(d)[j], " - ", "r = ", round(spearman$estimate, 2), " (", spearman.p.value, ")", sep = ""))
+      cat("\r\n")
+    }
     cat("\r\n")
     cat("\r\n")
 }
