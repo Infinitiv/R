@@ -1,5 +1,8 @@
 library('ggplot2')
-d <- read.csv("oxalat.csv")
+library('scales')
+library('Hmisc')
+df <- read.csv("../data/oxalat/oxalat.csv")
+df$start.ege <- ifelse(df$возраст.начала.заболевания < median(df$возраст.начала.заболевания, na.rm = T), 'младше 7 лет', '7 лет и старше')
 population.region3_15 <- 124056
 population.town3_15 <- 101869
 population.village3_15 <- 22187
@@ -7,13 +10,43 @@ population.ivanovo1_15 <- 53800
 population.ivanovo1_18 <- 63700
 population.zone1 <- 48740
 population.zone2 <- 15000
+pallete <- c('#ef5350', '#2196f3')
 
-sex.count <- round(table(d$Пол)/length(d$Пол)*100, 2)
-chisq.test.sex <- chisq.test(table(d$Пол))
-png(filename = "output/распределение наблюдений по полу.png")
-  barplot(sex.count, col = rainbow(2, start = 0.3, end = 0.6, alpha = 0.2), ylim = c(0, 80), ylab = "%", xlab = "Пол", main = paste(chisq.test.sex$method, "\n", ifelse(chisq.test.sex$p.value < 0.001, "p < 0.001", ifelse(chisq.test.sex$p.value < 0.05, "p < 0.05", paste("p = ", round(chisq.test.sex$p.value, 4), sep = "")))))
-  text(c(0.75, 1.95), sex.count, labels = formatC(sex.count, format = "f", digits = 2), pos = 3, cex = 1.2, col = "red")
-dev.off()
+sex.count <- as.data.frame(round(table(df$Пол)/length(df$Пол)*100, 2))
+prop.test.sex <- prop.test(table(df$Пол))
+if(prop.test.sex$p.value < 0.001){
+  s <- 'Одновыборочный тест пропорций - p < 0.001'
+} else if(prop.test.sex$p.value < 0.05){
+  s <- 'Одновыборочный тест пропорций - p < 0.05'
+} else{
+  s <- paste('Одновыборочный тест пропорций - p = ', prop.test.sex$p.value, sep = '')
+}
+ggplot(df, aes(Пол)) + geom_bar(aes(y=..count../sum(..count..), fill = ЛПУ)) + scale_y_continuous(name = 'Частота', labels=percent_format(), breaks = seq(0, 1, 0.25)) + ggtitle('Распределение наблюдений по полу', subtitle = s) + theme_classic() + scale_fill_manual(values = pallete)
+ggsave(filename = 'распределение наблюдений по полу.png', path = 'output', height = 5, width = 5)
+
+means <- tapply(df$доля.от.нормы, list(df$start.ege, df$ЛПУ), function(x) mean(x, na.rm = T))
+ymin <- tapply(df$доля.от.нормы, list(df$start.ege, df$ЛПУ), function(x) mean(x, na.rm = T) - 1.96*sd(x)/sqrt(length(x)))
+ymax <- tapply(df$доля.от.нормы, list(df$start.ege, df$ЛПУ), function(x) mean(x, na.rm = T) + 1.96*sd(x)/sqrt(length(x)))
+d <- data.frame(means = c(means), lower = c(ymin), upper = c(ymax), hospital = c('1 ГКБ', '1 ГКБ', 'ОКБ', 'ОКБ'), age = c('7 лет и старше', 'младше 7 лет'))
+ggplot(d, aes(age, means, col = hospital)) + geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) + geom_point() + labs(x = 'Возраст', y = 'Превышение нормального уровня экскреции, разы', col = 'ЛПУ') + ggtitle('Уровень экскреции оксалатов \nв зависимости от возраста начала заболевания') + theme_classic() + scale_color_manual(values = pallete)
+ggsave(filename = 'экскреция оксалатов в зависимости от возраста.png', path = 'output', height = 5, width = 5)
+
+wilcox.age.place <- wilcox.test(df$возраст.начала.заболевания ~ df$город.село)
+if(wilcox.age.place$p.value < 0.001){
+  s <- 'Критерий Манна-Уитни - p < 0.001'
+} else if(wilcox.age.place$p.value < 0.05){
+  s <- 'Критерий Манна-Уитни - p < 0.05'
+} else{
+  s <- paste('Критерий Манна-Уитни - p = ', prop.test.sex$p.value, sep = '')
+}
+means <- tapply(df$возраст.начала.заболевания, df$город.село, function(x) mean(x, na.rm = T))
+ymin <- tapply(df$возраст.начала.заболевания, df$город.село, function(x) mean(x, na.rm = T) - 1.96*sd(x, na.rm = T)/sqrt(length(x)))
+ymax <- tapply(df$возраст.начала.заболевания, df$город.село, function(x) mean(x, na.rm = T) + 1.96*sd(x, na.rm = T)/sqrt(length(x)))
+d <- data.frame(means = c(means), lower = c(ymin), upper = c(ymax), place = c('город', 'село'))
+ggplot(d, aes(place, means, col = place)) + geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) + geom_point() + labs(x = 'Место жительства', y = 'Возраст начала заболевания, лет', col = 'Место жительства') + ggtitle('Возраст начала заболевания \nв зависимости от места проживания', s) + guides(col = F) + theme_classic() + scale_color_manual(values = pallete)
+ggsave(filename = 'возраст начала заболевания в зависимости от места проживания.png', path = 'output', height = 5, width = 5)
+
+ggplot(df, aes(стаж.заболевания, доля.от.нормы, col = ЛПУ)) + geom_point()
 
 sink("output/заболеваемость ДОН на 1000 детского населения.txt")
 cat("Заболеваемость дисметаболической нефропатией в Ивановской области по обращаемости в ОКБ")

@@ -1,5 +1,5 @@
 Корреляция между степенью превышения нормального уровня экскреции оксалатов и возрастом начала заболевания
-Spearman's rank correlation rho = -0.16 p = 0.1129
+Spearman's rank correlation rho = -0.03 p = 0.5892
 
 Корреляция между степенью превышения нормального уровня экскреции оксалатов и стажем заболевания
-Spearman's rank correlation rho  =  0.04 p = 0.6856
+Spearman's rank correlation rho  =  -0.14 p < 0.05
