@@ -41,3 +41,4 @@ vignettes/*.pdf
 *.knit.md
 x86_64-pc-linux-gnu-library
 *.derectory
+.Rproj.user
