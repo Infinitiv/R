@@ -1,0 +1,4 @@
+Сравнение групп по полу, p = 0.602 (Метод - Pearson's Chi-squared test with Yates' continuity correction)
+Сравнение групп по возрасту, p = 0.0603 (Метод - Wilcoxon rank sum test with continuity correction)
+Сравнение групп по баллам терапии, p = 1e-04 (Метод - Wilcoxon rank sum test with continuity correction)
+Сравнение баллов терапии по наличию рефлюкса, p = 0.0887 (Метод - Wilcoxon rank sum test with continuity correction)
