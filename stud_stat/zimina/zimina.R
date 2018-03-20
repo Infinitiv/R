@@ -1,5 +1,5 @@
 library(tidyverse)
-# устанавливаем уровенть достоверности
+# устанавливаем уровень достоверности
 a <- 0.05
 
 # читаем данные
@@ -28,12 +28,14 @@ cor <- cor.test(df_select$age, df_select$level, method = 'spearman')
 # считаем достоверность различия баллов терапии в зависимости от наличия рефлюкса
 df_select_reflux <- filter(df_select, group == 'Астма + поражение ВОПТ')
 wilcox_reflux <- wilcox.test(level ~ reflux, df_select)
+tapply(df_select_reflux$treatment_scale, df_select_reflux$reflux, mean_se)
 
 # считаем достоверность различия баллов терапии по группа исследования
 wilcox_group <- wilcox.test(level ~ group, df_select)
 wilcox.test(level ~ group, df_select)
-cor.test(df_select$level, df_select$level)
-ggplot(df_select) + geom_point(aes(x = treatment_scale, y = level, color = sex), position = 'jitter')
+cor.test(df_select$level, df_select$treatment_scale)
+fisher.test(df_select$group, df_select$level)
+ggplot(df_select) + geom_point(aes(x = treatment_scale, y = level, color = sex), position = 'jitter') + geom_smooth(aes(x = treatment_scale, y = level), method = 'lm')
 
 # отчет
 sink('~/R/stud_stat/zimina/output/zimina.txt')
