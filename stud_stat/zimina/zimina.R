@@ -27,6 +27,8 @@ wilcox.age.in.groups <- wilcox.test(age ~ group, df_select)
 table.group <- table(df_select$group)
 cor.age.level <- cor.test(df_select$age, df_select$level)
 cor.level.treatment_scale <- cor.test(df_select$level, df_select$treatment_scale)
+count.sex <- round(table(df_select$sex)/length(df_select$sex)*100, 2)
+chisq.test(table(df_select$sex))
 
 # считаем достоверность различия баллов терапии в зависимости от наличия рефлюкса
 df_select_reflux <- filter(df_select, group == 'Астма + поражение ВОПТ')
@@ -45,13 +47,13 @@ cat(names(table.group))
 cat("\r\n")
 cat(table.group)
 cat("\r\n")
-cat(paste('Сравнение групп по полу, p = ', round(chisq.sex.in.groups$p.value, 4), ' (Метод - ', chisq.sex.in.groups$method, ')', sep = ''))
+cat(paste('Сравнение групп по полу, p = ', round(chisq.sex.in.groups$p.value, 6), ' (Метод - ', chisq.sex.in.groups$method, ')', sep = ''))
 cat("\r\n")
-cat(paste('Сравнение групп по возрасту, p = ', round(wilcox.age.in.groups$p.value, 4), ' (Метод - ', wilcox.age.in.groups$method, ')', sep = ''))
+cat(paste('Сравнение групп по возрасту, p = ', round(wilcox.age.in.groups$p.value, 6), ' (Метод - ', wilcox.age.in.groups$method, ')', sep = ''))
 cat("\r\n")
-cat(paste('Сравнение групп по баллам терапии, p = ', round(wilcox_group$p.value, 4), ' (Метод - ', wilcox_group$method, ')', sep = ''))
+cat(paste('Сравнение групп по баллам терапии, p = ', round(wilcox_group$p.value, 6), ' (Метод - ', wilcox_group$method, ')', sep = ''))
 cat("\r\n")
-cat(paste('Сравнение баллов терапии по наличию рефлюкса, p = ', round(wilcox_reflux$p.value, 4), ' (Метод - ', wilcox_reflux$method, ')', sep = ''))
+cat(paste('Сравнение баллов терапии по наличию рефлюкса, p = ', round(wilcox_reflux$p.value, 6), ' (Метод - ', wilcox_reflux$method, ')', sep = ''))
 sink()
 
 # графики
@@ -78,7 +80,7 @@ ggplot(df_select) +
 dev.off()
 
 # диаграмма возрастно-половой структуры
-png(filename = "~/R/stud_stat/zimina/output/Восзрастно-половая структура.png", width = 600, height = 480)
+png(filename = "~/R/stud_stat/zimina/output/Возрастно-половая структура.png", width = 600, height = 480)
 ggplot(df_select) +
   geom_histogram(aes(x = age, fill = sex), position = 'fill', binwidth = 1) +
   theme_bw() +
@@ -103,7 +105,7 @@ dev.off()
 png(filename = "~/R/stud_stat/zimina/output/Сравнение тяжести БА по наличию рефлюкса.png", width = 600, height = 480)
 ggplot(df_select_reflux, aes(x = reflux, y = level, color = reflux)) + 
   stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96)) + 
-  ylab('Балл терапии') + xlab('Рефлюкс') + 
+  ylab('Степень тяжести БА') + xlab('Рефлюкс') + 
   ggtitle(paste('Сравнение тяжести БА по наличию рефлюкса', 'p =', round(wilcox_reflux$p.value, 6), sep = ' ')) +
   theme_bw() +
   theme(legend.position = 'none')

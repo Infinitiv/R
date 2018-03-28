@@ -1,7 +1,7 @@
 Количество пациентов в группах:
 Астма + поражение ВОПТ Изолированная астма
 25 92
-Сравнение групп по полу, p = 0.6149 (Метод - Pearson's Chi-squared test with Yates' continuity correction)
-Сравнение групп по возрасту, p = 0.1057 (Метод - Wilcoxon rank sum test with continuity correction)
-Сравнение групп по баллам терапии, p = 1e-04 (Метод - Wilcoxon rank sum test with continuity correction)
-Сравнение баллов терапии по наличию рефлюкса, p = 0.3505 (Метод - Wilcoxon rank sum test with continuity correction)
+Сравнение групп по полу, p = 0.614893 (Метод - Pearson's Chi-squared test with Yates' continuity correction)
+Сравнение групп по возрасту, p = 0.105672 (Метод - Wilcoxon rank sum test with continuity correction)
+Сравнение групп по баллам терапии, p = 6.6e-05 (Метод - Wilcoxon rank sum test with continuity correction)
+Сравнение баллов терапии по наличию рефлюкса, p = 0.350547 (Метод - Wilcoxon rank sum test with continuity correction)
