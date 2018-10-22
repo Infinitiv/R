@@ -1,0 +1,26 @@
+library(tidyverse)
+d2016 <- data.frame(date = fromJSON('http://priem.me/api/stats/2016/entrants'))
+d2016 <- as.data.frame(table(d2016))
+names(d2016) <- c('day', 'entrants')
+d2016$year <- 2016
+d2016$day <- seq(1:length(d2016$day))
+d2017 <- data.frame(date = fromJSON('http://priem.me/api/stats/2017/entrants'))
+d2017 <- as.data.frame(table(d2017))
+names(d2017) <- c('day', 'entrants')
+d2017$year <- 2017
+d2017$day <- seq(1:length(d2017$day))
+d2018 <- data.frame(date = fromJSON('http://priem.me/api/stats/2018/entrants'))
+d2018 <- as.data.frame(table(d2018))
+names(d2018) <- c('day', 'entrants')
+d2018$year <- 2018
+d2018$day <- seq(1:length(d2018$day))
+df <- rbind(d2016, d2017, d2018)
+df$year <- as.factor(df$year)
+df <- df %>% group_by(year) %>% mutate(cum_sum = cumsum(entrants))
+png(filename = './entrants.png', height = 720, width = 1280)
+  ggplot(df, aes(x = day, y = entrants, col = year)) + geom_point() + geom_line()
+dev.off()
+png(filename = './entrants_cum_sum.png', height = 720, width = 1280)
+  ggplot(df, aes(x = day, y = cum_sum, col = year)) + geom_line()
+dev.off()
+
