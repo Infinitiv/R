@@ -1,0 +1,10 @@
+library(tidyverse) 
+df <- read.csv('data.csv')
+d <- df %>% group_by(year, url) %>% summarise(n = n())
+ggplot(d, aes(x = year, y = n, color = url)) + geom_line()
+ggplot(filter(d, url == 'isma.ivanovo.ru'), aes(x = year, y = n, color = degree)) + geom_point() + geom_line(aes(x = year, y = n))
+d <- df %>% filter(year == 2019) %>% group_by(url, degree)
+ggplot(d, aes(x = url, fill = degree)) + geom_bar(position = 'fill')
+d <- df %>% filter(degree == 'доктор наук') %>% group_by(url, year)
+ggplot(d, aes(x = url, fill = as.factor(year))) + geom_bar(position = 'dodge')
+  
