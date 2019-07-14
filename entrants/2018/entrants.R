@@ -3,6 +3,9 @@ library(tidyverse)
 a <- 0.95
 
 df <- read.csv('/home/markovnin/R/data/entrants/2018.csv')
+entrants <- df %>% 
+  mutate(budget_paid = ifelse(competition == 'paid', 'paid', 'budget')) %>%
+  group_by(institute, specialty, budget_paid) %>% summarise(count = n())
 enrolled <- df %>% 
   mutate(summa = (chemistry + biology + russian), mean = summa/3) %>% 
   group_by(specialty, competition, institute) %>% 
