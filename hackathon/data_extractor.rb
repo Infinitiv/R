@@ -8,12 +8,11 @@ require 'csv'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 INSTITUTS = ['isma.ivanovo.ru',
-             'ispu.ru',
-             'ivgsha.ru',
-             'ivgpu.com',
-             'ivanovo.ac.ru',
-             'isuct.ru',
-             'ysmu.ru']
+            #  'ispu.ru',
+            #  'ivgsha.ru',
+            #  'ivgpu.com',
+            #  'ivanovo.ac.ru',
+             'isuct.ru']
 
 employees_uri = '/sveden/employees'
 EDUCATION_URI = '/sveden/education'
@@ -63,16 +62,17 @@ def fetch_employees_data(url)
       else
         'нет степени'
       end
-      gen_experience = gen_experience.to_i == 0 ? '' : gen_experience.to_i
-      spec_experience = spec_experience.to_i == 0 ? '' : spec_experience.to_i
-      data << [fio, degree, gen_experience, spec_experience]
+      gen_experience = gen_experience.to_i == 0 ? 'NaN' : gen_experience.to_i
+      spec_experience = spec_experience.to_i == 0 ? 'NaN' : spec_experience.to_i
+      data << {fio: fio, degree: degree, gen_experience: gen_experience, spec_experience: spec_experience}
     end
   end
   return data
 end
 
 csv = CSV.open("./data.csv", 'wb')
-csv << (['fio', 'degree', 'gen_experience', 'spec_experience', 'year', 'url']) 
+csv << (['fio', 'degree', 'gen_experience', 'spec_experience', 'year', 'url'])
+data_array = []
 INSTITUTS.each do |url|
   puts url
   last_year = ''
@@ -84,8 +84,8 @@ INSTITUTS.each do |url|
     n = 0
     fetch_employees_data(url_gen(timestamp, url, employees_uri)).each do |line|
       n += 1
-      unless line.compact.empty?
-        csv << (line.push(year).push(url))
+      unless line.values.compact.empty?
+        data_array << line.merge({year: year, url: url})
       end
     end
     puts "Добавлено #{n} строк"
@@ -97,9 +97,11 @@ INSTITUTS.each do |url|
     fetch_employees_data('http://' + url + employees_uri).each do |line|
       n += 1
       unless line.compact.empty?
-        csv << line.push(year, url)
+        data_array << line.merge({year: year, url: url})
       end
     end
     puts "Добавлено #{n} строк"
   end
 end
+data_array = data_array.sort_by{|line| [line[:url], line[:fio], line[:year].to_i]}
+data_array.each{|line| csv << line.values}
