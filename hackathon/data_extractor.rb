@@ -8,10 +8,10 @@ require 'csv'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 INSTITUTS = ['isma.ivanovo.ru',
-            #  'ispu.ru',
-            #  'ivgsha.ru',
-            #  'ivgpu.com',
-            #  'ivanovo.ac.ru',
+             'ispu.ru',
+             'ivgsha.ru',
+             'ivgpu.com',
+             'ivanovo.ac.ru',
              'isuct.ru']
 
 employees_uri = '/sveden/employees'
@@ -47,7 +47,7 @@ def fetch_employees_data(url)
   html.css('tr').each do |tr|
     if tr.at_css('[@itemprop = "fio"]') && (tr.at_css('[@itemprop = "Degree"]') || tr.at_css('[@itemprop = "degree"]'))
       n += 1
-      fio = tr.at_css('[@itemprop = "fio"]').children.text.strip
+      fio = tr.at_css('[@itemprop = "fio"]').children.text.strip.gsub(/\s{2,}/, " ")
       degree = tr.at_css('[@itemprop = "Degree"]').children.text.strip if tr.at_css('[@itemprop = "Degree"]')
       degree = tr.at_css('[@itemprop = "degree"]').children.text.strip if tr.at_css('[@itemprop = "degree"]')
       gen_experience = tr.at_css('[@itemprop = "genExperience"]').children.text.strip if tr.at_css('[@itemprop = "genExperience"]')
@@ -70,12 +70,13 @@ def fetch_employees_data(url)
   return data
 end
 
-csv = CSV.open("./data.csv", 'wb')
-csv << (['fio', 'degree', 'gen_experience', 'spec_experience', 'year', 'url'])
+csv = CSV.open("../data/hackathon/data.csv", 'wb')
+csv << (['fio', 'degree', 'gen_experience', 'spec_experience', 'year', 'url', 'status'])
 data_array = []
+start_year = ''
+last_year = ''
 INSTITUTS.each do |url|
   puts url
-  last_year = ''
   employees_uri = url == 'ivgpu.com' ? '/sveden/employees/faculty' : '/sveden/employees'
   timestemps = fetch_timestamps(url, employees_uri)
   filter_timestamps(timestemps).each do |year, timestamp|
@@ -96,7 +97,7 @@ INSTITUTS.each do |url|
     n = 0
     fetch_employees_data('http://' + url + employees_uri).each do |line|
       n += 1
-      unless line.compact.empty?
+      unless line.values.compact.empty?
         data_array << line.merge({year: year, url: url})
       end
     end
@@ -104,4 +105,20 @@ INSTITUTS.each do |url|
   end
 end
 data_array = data_array.sort_by{|line| [line[:url], line[:fio], line[:year].to_i]}
+data_array.each_with_index do |line, index|
+  start_year = line[:year] if index == 0 || data_array[index][:url] != data_array[index - 1][:url]
+  if index == 0 || line[:year] == start_year || line[:year] == last_year
+    line[:status] = 'работает'
+  else
+    if line[:fio] == data_array[index - 1][:fio]
+      line[:status] = 'работает'
+    else
+      if line[:fio] != data_array[index + 1][:fio]
+        line[:status] = 'уволен'
+      else
+        line[:status] = 'принят на работу'
+      end
+    end
+  end
+end
 data_array.each{|line| csv << line.values}
