@@ -1,0 +1,301 @@
+# A tibble: 2 x 5
+  group         treatment_duration   age weight   day
+  <fct>                      <dbl> <dbl>  <dbl> <dbl>
+1 гризеофульвин               10.8  7.64   27.0  4.04
+2 тербинафин                  13.2  8.32   28.7  3.12
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$длительность.терапии..нед. by df$группа
+W = 211, p-value = 0.0484
+alternative hypothesis: true location shift is not equal to 0
+
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$возраст by df$группа
+W = 262, p-value = 0.3252
+alternative hypothesis: true location shift is not equal to 0
+
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$масса.тела..кг by df$группа
+W = 269, p-value = 0.4021
+alternative hypothesis: true location shift is not equal to 0
+
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$день.обращения by df$группа
+W = 406.5, p-value = 0.06216
+alternative hypothesis: true location shift is not equal to 0
+
+$гризеофульвин
+
+  ДОУ школа 
+   10    15 
+
+$тербинафин
+
+  ДОУ школа 
+    6    19 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$место.обучения and df$группа
+p-value = 0.3635
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.5371283 8.7102208
+sample estimates:
+odds ratio 
+  2.079396 
+
+$гризеофульвин
+
+город  село 
+   13    12 
+
+$тербинафин
+
+город  село 
+   15    10 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$место.жительства and df$группа
+p-value = 0.7761
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.2034158 2.5463984
+sample estimates:
+odds ratio 
+ 0.7269702 
+
+$гризеофульвин
+
+ да нет 
+ 18   7 
+
+$тербинафин
+
+ да нет 
+ 16   9 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$контакт.с.животными and df$группа
+p-value = 0.7624
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.3740648 5.7172381
+sample estimates:
+odds ratio 
+  1.435732 
+
+$гризеофульвин
+
+ да нет 
+ 18   7 
+
+$тербинафин
+
+ да нет 
+ 16   9 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$контакт.с.животными and df$группа
+p-value = 0.7624
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.3740648 5.7172381
+sample estimates:
+odds ratio 
+  1.435732 
+
+$гризеофульвин
+
+            да не установлено            нет 
+             4              0             21 
+
+$тербинафин
+
+            да не установлено            нет 
+             5              4             16 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$контакт.с.больными.людьми and df$группа
+p-value = 0.1197
+alternative hypothesis: two.sided
+
+$гризеофульвин
+
+ да нет 
+ 18   7 
+
+$тербинафин
+
+ да нет 
+ 19   6 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$контакт and df$группа
+p-value = 1
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.1863912 3.4628071
+sample estimates:
+odds ratio 
+ 0.8154239 
+
+$гризеофульвин
+
+ да нет 
+  9  16 
+
+$тербинафин
+
+ да нет 
+  6  19 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$поражение.гладкой.кожи and df$группа
+p-value = 0.538
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.4451582 7.4430154
+sample estimates:
+odds ratio 
+  1.760695 
+
+$гризеофульвин
+
+ да нет 
+  4  21 
+
+$тербинафин
+
+ да нет 
+  4  21 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$поражение.ногтей and df$группа
+p-value = 1
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.1628247 6.1415738
+sample estimates:
+odds ratio 
+         1 
+
+$гризеофульвин
+
+ да нет 
+ 12  13 
+
+$тербинафин
+
+ да нет 
+ 14  11 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$соблюдение.условий.приема and df$группа
+p-value = 0.7775
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.2064272 2.5338625
+sample estimates:
+odds ratio 
+ 0.7299818 
+
+$гризеофульвин
+
+ да нет 
+ 13  12 
+
+$тербинафин
+
+ да нет 
+ 14  11 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$комплаенс and df$группа
+p-value = 1
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.2424895 2.9786415
+sample estimates:
+odds ratio 
+ 0.8539438 
+
+$гризеофульвин
+
+ да нет 
+ 16   9 
+
+$тербинафин
+
+ да нет 
+  6  19 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$побочные.эффекты and df$группа
+p-value = 0.009595
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  1.426859 23.336315
+sample estimates:
+odds ratio 
+  5.415661 
+
+$гризеофульвин
+
+      1       2       3 более 3 
+     13       4       2       6 
+
+$тербинафин
+
+      1       2       3 более 3 
+     12       6       2       5 
+
+
+	Fisher's Exact Test for Count Data
+
+data:  df$количество.очагов and df$группа
+p-value = 0.9425
+alternative hypothesis: two.sided
+
+$гризеофульвин
+
+аллергическая реакция             артралгии             депрессия             диспепсия            неврология                   нет 
+                    0                     0                     0                     9                     3                     9 
+  носовые кровтечения 
+                    4 
+
+$тербинафин
+
+аллергическая реакция             артралгии             депрессия             диспепсия            неврология                   нет 
+                    1                     2                     1                     1                     1                    19 
+  носовые кровтечения 
+                    0 
+

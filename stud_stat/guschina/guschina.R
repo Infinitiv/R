@@ -8,6 +8,16 @@ df$mother <- as.factor(df$mother)
 df$father <- as.factor(df$father)
 df$grandfather <- as.factor(df$grandfather)
 df$grandmother <- as.factor(df$grandmother)
+
+mean.age <- round(mean(df$age, na.rm = T), 2)
+mean.age.se <- round(sd(df$age)/sqrt(length(df$age)), 2)
+
+gender.percentage <- round(table(df$gender)*100/length(df$gender), 2)
+hospitalization.percentage <- round(table(df$hospitalization)*100/length(df$hospitalization), 2)
+
+tapply(df$hospitalization, df$group, function(x) round(table(x)*100/length(x), 2))
+
+
 df <- filter(df, group != 3)
 mean_age <- df %>% 
   group_by(group) %>% 

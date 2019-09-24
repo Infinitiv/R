@@ -11,12 +11,14 @@ df$sex <- factor(ifelse(df$Пол == 'м', 'мужской', 'женский'))
 df$age <- df$Возраст
 df$salbutamol_test <- ifelse(abs(df$ОФВ1 - df$`ОФВ1 с Sal`) > 12, 'положительный', 'отрицательный')
 df$control <- ifelse(df$ОФВ1 > 80, 'контроль', 'нет контроля')
-df$treatment_scale <- df$`Баллы терапии`
+df$treatment_scale <- ifelse(df$control == 'контроль', df$`Баллы терапии`, NaN)
 df$reflux <- ifelse(df$Рефлюкс == 0, 'рефлюкса нет', 'рефлюкс есть')
 df$level <- df$`Тяжесть БА`
 
 # выбираем переменные для анализа
 df_select <- filter(select(df, group, sex, age, salbutamol_test, control, treatment_scale, reflux, level), !(age > 16 & sex == 'мужской'))
+
+table(df_select$group)
 
 # описательная статистика
 chisq.sex <- chisq.test(table(df_select$sex))
@@ -25,8 +27,8 @@ percentage.sex <- tapply(df_select$sex, df_select$group, function(x) round(table
 percentage.level <- round(table(df_select$level)/length(df_select$level)*100, 2)
 wilcox.age.in.groups <- wilcox.test(age ~ group, df_select)
 table.group <- table(df_select$group)
-cor.age.level <- cor.test(df_select$age, df_select$level)
-cor.level.treatment_scale <- cor.test(df_select$level, df_select$treatment_scale)
+cor.age.level <- cor.test(df_select$age, df_select$level, method = 'spearman')
+cor.level.treatment_scale <- cor.test(df_select$level, df_select$treatment_scale, method = 'spearman')
 count.sex <- round(table(df_select$sex)/length(df_select$sex)*100, 2)
 chisq.test(table(df_select$sex))
 
@@ -58,8 +60,8 @@ sink()
 
 # графики
 # диаграмма распределение групп по возрасту
-png(filename = "~/R/stud_stat/zimina/output/Сравнение групп по возрасту.png", width = 600, height = 480)
-ggplot(df_select, aes(x = group, y = age, color = group)) + 
+png(filename = "~/R/stud_stat/zimina/output/Сравнение групп по возрасту.png", width = 1024, height = 768)
+ggplot(df_select, aes(x = group, y = age)) + 
   stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96)) + 
   ylab('Возраст') + xlab('Группа') + 
   ggtitle(paste('Сравнение групп по возрасту', 'p =', round(wilcox.age.in.groups$p.value, 6), sep = ' ')) +
@@ -68,9 +70,9 @@ ggplot(df_select, aes(x = group, y = age, color = group)) +
 dev.off()
 
 # диаграмма распределения баллов терапии по возрасту
-png(filename = "~/R/stud_stat/zimina/output/Корелляция между возрастом и тяжестью БА.png", width = 600, height = 480)
+png(filename = "~/R/stud_stat/zimina/output/Корелляция между возрастом и тяжестью БА.png", width = 1024, height = 768)
 ggplot(df_select) + 
-  geom_point(aes(x = age, y = level, color = sex), position = 'jitter') +
+  geom_point(aes(x = age, y = level, shape = sex), position = 'jitter') +
   geom_smooth(aes(x = age, y = level), method = 'lm') +
   theme_bw() +
   ylab('Тяжесть БА') + 
@@ -80,7 +82,7 @@ ggplot(df_select) +
 dev.off()
 
 # диаграмма возрастно-половой структуры
-png(filename = "~/R/stud_stat/zimina/output/Возрастно-половая структура.png", width = 600, height = 480)
+png(filename = "~/R/stud_stat/zimina/output/Возрастно-половая структура.png", width = 1024, height = 768)
 ggplot(df_select) +
   geom_histogram(aes(x = age, fill = sex), position = 'fill', binwidth = 1) +
   theme_bw() +
@@ -88,12 +90,13 @@ ggplot(df_select) +
   ylab('Доля') + 
   xlab('Возраст') +
   theme(legend.title = element_blank()) +
-  ggtitle(paste('Возрастно-половой состав - ', 'p = ', round(chisq.sex.in.groups$p.value, 4), sep = ''))
+  ggtitle(paste('Возрастно-половой состав - ', 'p = ', round(chisq.sex.in.groups$p.value, 4), sep = '')) +
+  scale_fill_grey()
 dev.off()
 
 # сравнение групп по баллам базисной терапии
-png(filename = "~/R/stud_stat/zimina/output/Сравнение групп по тяжести БА.png", width = 600, height = 480)
-ggplot(df_select, aes(x = group, y = level, color = group)) + 
+png(filename = "~/R/stud_stat/zimina/output/Сравнение групп по тяжести БА.png", width = 1024, height = 768)
+ggplot(df_select, aes(x = group, y = level)) + 
   stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96)) + 
   ylab('Тяжесть БА') + xlab('Группа') + 
   ggtitle(paste('Сравнение групп по тяжести БА', 'p =', round(wilcox_group$p.value, 6), sep = ' ')) +
@@ -102,8 +105,8 @@ ggplot(df_select, aes(x = group, y = level, color = group)) +
 dev.off()
 
 # сравнение баллов базисной терапии по наличию рефлюкса
-png(filename = "~/R/stud_stat/zimina/output/Сравнение тяжести БА по наличию рефлюкса.png", width = 600, height = 480)
-ggplot(df_select_reflux, aes(x = reflux, y = level, color = reflux)) + 
+png(filename = "~/R/stud_stat/zimina/output/Сравнение тяжести БА по наличию рефлюкса.png", width = 1024, height = 768)
+ggplot(df_select_reflux, aes(x = reflux, y = level)) + 
   stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96)) + 
   ylab('Степень тяжести БА') + xlab('Рефлюкс') + 
   ggtitle(paste('Сравнение тяжести БА по наличию рефлюкса', 'p =', round(wilcox_reflux$p.value, 6), sep = ' ')) +
@@ -112,9 +115,9 @@ ggplot(df_select_reflux, aes(x = reflux, y = level, color = reflux)) +
 dev.off()
 
 # диаграмма взаимосвязи между тяжестью БА и баллами терапии
-png(filename = "~/R/stud_stat/zimina/output/Взаимосвязь между тяжестью БА и баллами терапии.png", width = 600, height = 480)
+png(filename = "~/R/stud_stat/zimina/output/Взаимосвязь между тяжестью БА и баллами терапии.png", width = 1024, height = 768)
 ggplot(df_select) + 
-  geom_point(aes(x = treatment_scale, y = level, color = sex), position = 'jitter') + 
+  geom_point(aes(x = treatment_scale, y = level, shape = sex), position = 'jitter') + 
   geom_smooth(aes(x = treatment_scale, y = level), method = 'lm') + 
   theme_bw() +
   ylab('Балл терапии') + 
