@@ -1,6 +1,6 @@
 library(tidyverse)
 library(jsonlite)
-host = 'http://priem.me'
+host = 'http://10.0.5.131:3003'
 path = 'api/stats'
 campaigns <- data.frame(fromJSON(paste(host, path, 'campaigns', sep = '/')))
 campaigns <- campaigns %>% arrange(year_start)
@@ -32,22 +32,62 @@ entrants$education_document_date <- as.Date(entrants$education_document_date)
 
 write.csv(entrants, '~/R/data/entrants/2019.csv')
 
+df <- read.csv('~/R/data/entrants/2019.csv')
+df %>% filter(!is.na(enrolled_name), status_id == 4, education_source_id != 'Внебюджет') %>%
+  group_by(direction_id, year) %>%
+  summarise(mean = mean(mean_ege, na.rm = T))
+
 entrants2019 <- entrants %>% filter(year == 2019)
 
-entrants2019 %>% 
-  filter(!is.na(enrolled_name), status_id == 4) %>%
-  group_by(education_document_type, exam_category) %>% 
-  summarise(n = n())
+entrants2019_enrolled <- entrants2019 %>% filter(!is.na(enrolled_name), status_id == 4)
+
+entrants2019_enrolled %>% group_by(direction_id, education_source_id) %>% summarise(min = min(sum + achievements))
+
+target_by_organization <- entrants2019_enrolled %>% filter(education_source_id == 'Целевая квота') %>% group_by(direction_id, target_organization_name.) %>% summarise(n = n())
+  
+write.csv(target_by_organization, '~/R/data/entrants/target.csv')
+entrants2019_budget <- entrants2019 %>% 
+  filter(!is.na(enrolled_name), status_id == 4, education_source_id != 'Внебюджет')
+
+entrants2019_budget_last_year <- entrants2019_budget %>% filter(education_document_date >= '2018-10-01')
+
+entrants2019_paid_last_year <- entrants2019_paid %>% filter(education_document_date >= '2018-10-01')
+
+entrants2019_paid <- entrants2019 %>% 
+  filter(!is.na(enrolled_name), status_id == 4, education_source_id == 'Внебюджет')
+
+entrants2019_budget %>% group_by(education_document_type, exam_category) %>% summarise(n = n())
+
+entrants2019_paid %>% group_by(education_document_type, exam_category) %>% summarise(n = n())
+
+entrants2019_budget %>% group_by(education_source_id, benefit_type) %>% summarise(n = n())
+
+entrants2019_paid %>% group_by(education_source_id, benefit_type) %>% summarise(n = n())
+entrants2019_budget %>% group_by(direction_id, benefit_document_type) %>% summarise(n = n())
+entrants2019_enrolled %>% group_by(direction_id, gender_id) %>% summarise(n = n())
+
+entrants2019_budget %>% group_by(education_document_type) %>% summarise(n = n())
+
+entrants2019_budget_last_year %>% group_by(education_document_type) %>% summarise(n = n())
+
+entrants2019_paid_last_year %>% group_by(education_document_type) %>% summarise(n = n())
+
+entrants2019_paid %>% group_by(education_document_type) %>% summarise(n = n())
 
 entrants2019 %>% filter(education_document_date >= as.Date("2018-09-01")) %>% 
   group_by(education_document_type, exam_category) %>% 
   summarise(n = n())
 
 target_entrants_freq <- entrants %>% filter(!is.na(target_organization_name.)) %>% 
-  group_by(year, enrolled_name, target_region.) %>% 
+  group_by(year, enrolled_name) %>% 
   summarise(n = n()) %>% 
   mutate(freq = n*100/sum(n)) %>%
-  arrange(enrolled_name, target_region., year)
+  arrange(enrolled_name, year, target_region.)
+
+target_entrants_iv_count <- entrants %>% filter(!is.na(target_organization_name.), target_region. == 37) %>% 
+  group_by(year, direction_id) %>% 
+  summarise(n = n(), min = min(sum + achievements)) %>% 
+  arrange(direction_id, year)
     
 ggplot(target_entrants_freq, aes(x = year, y = freq)) +
   geom_point(size = 2) +
