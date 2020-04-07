@@ -1,5 +1,5 @@
 library(tidyverse) 
-df <- read.csv('data.csv')
+df <- read.csv('../data/hackathon/data.csv')
 d <- df %>% group_by(year, url) %>% summarise(n = n())
 ggplot(d, aes(x = year, y = n, color = url)) + geom_line()
 ggplot(filter(d, url == 'isma.ivanovo.ru'), aes(x = year, y = n, color = degree)) + geom_point() + geom_line(aes(x = year, y = n))
