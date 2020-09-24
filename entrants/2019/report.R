@@ -1,41 +1,47 @@
-library(tidyverse)
-library(jsonlite)
-host = 'http://10.0.5.131:3003'
-path = 'api/stats'
-campaigns <- data.frame(fromJSON(paste(host, path, 'campaigns', sep = '/')))
-campaigns <- campaigns %>% arrange(year_start)
-entrants <- data.frame(fromJSON(paste(host, path, 2016, 'entrants', sep = '/')))
-for(i in 2:length(campaigns$year_start)){
-  year <- campaigns$year_start[i]
-  tmp <- data.frame(fromJSON(paste(host, path, year, 'entrants', sep = '/')))
-  entrants <- rbind(entrants, tmp)
-}
-
-entrants$year <- as.factor(entrants$year)
-entrants$application_number <- as.factor(entrants$application_number)
-entrants$gender_id <- as.factor(entrants$gender_id)
-levels(entrants$gender_id) <- c('мужской', 'женский')
-entrants$birth_date <- as.Date(entrants$birth_date)
-entrants$region_id <- as.factor(entrants$region_id)
-entrants$registration_date <- as.Date(entrants$registration_date)
-entrants$nationality_type_id <- as.factor(entrants$nationality_type_id)
-entrants$status_id <- as.factor(entrants$status_id)
-entrants$return_documents_date <- as.Date(entrants$return_documents_date)
-entrants$direction_id <- as.factor(entrants$direction_id)
-levels(entrants$direction_id) <- c('Стоматология', 'Педиатрия', 'Лечебно дело')
-entrants$education_source_id <- as.factor(entrants$education_source_id)
-levels(entrants$education_source_id) <- c('Бюджет', 'Внебюджет', 'Целевая квота', 'Квота особого права')
-entrants$enrolled_date <- as.Date(entrants$enrolled_date)
-entrants$exeptioned_date <- as.Date(entrants$exeptioned_date)
-entrants$target_region. <- as.factor(entrants$target_region.)
-entrants$education_document_date <- as.Date(entrants$education_document_date)
-
-write.csv(entrants, '~/R/data/entrants/2019.csv')
-
-df <- read.csv('~/R/data/entrants/2019.csv')
+  library(tidyverse)
+  library(jsonlite)
+  host = 'http://priem.isma.ivanovo.ru'
+  path = 'api/stats'
+  campaigns <- data.frame(fromJSON(paste(host, path, 'campaigns', sep = '/')))
+  campaigns <- campaigns %>% arrange(year_start)
+  entrants <- data.frame(fromJSON(paste(host, path, 2016, 'entrants', sep = '/')))
+  for(i in 2:length(campaigns$year_start)){
+    year <- campaigns$year_start[i]
+    tmp <- data.frame(fromJSON(paste(host, path, year, 'entrants', sep = '/')))
+    entrants <- rbind(entrants, tmp)
+  }
+  
+  entrants$year <- as.factor(entrants$year)
+  entrants$application_number <- as.factor(entrants$application_number)
+  entrants$gender_id <- as.factor(entrants$gender_id)
+  levels(entrants$gender_id) <- c('мужской', 'женский')
+  entrants$birth_date <- as.Date(entrants$birth_date)
+  entrants$region_id <- as.factor(entrants$region_id)
+  entrants$registration_date <- as.Date(entrants$registration_date)
+  entrants$nationality_type_id <- as.factor(entrants$nationality_type_id)
+  entrants$status_id <- as.factor(entrants$status_id)
+  entrants$return_documents_date <- as.Date(entrants$return_documents_date)
+  entrants$direction_id <- as.factor(entrants$direction_id)
+  levels(entrants$direction_id) <- c('Стоматология', 'Педиатрия', 'Лечебно дело')
+  entrants$education_source_id <- as.factor(entrants$education_source_id)
+  levels(entrants$education_source_id) <- c('Бюджет', 'Внебюджет', 'Целевая квота', 'Квота особого права')
+  entrants$enrolled_date <- as.Date(entrants$enrolled_date)
+  entrants$exeptioned_date <- as.Date(entrants$exeptioned_date)
+  entrants$target_region. <- as.factor(entrants$target_region.)
+  entrants$education_document_date <- as.Date(entrants$education_document_date)
+  
+  write.csv(entrants, '~/R/data/entrants/2020.csv')
+  
+  df <- read.csv('~/R/data/entrants/2020.csv')
 df %>% filter(!is.na(enrolled_name), status_id == 4, education_source_id != 'Внебюджет') %>%
   group_by(direction_id, year) %>%
   summarise(mean = mean(mean_ege, na.rm = T))
+
+current_entrants <- entrants %>% filter(year == 2020)
+
+current_exam_form <- current_entrants %>% filter(!is.na(enrolled_name), status_id == 4, education_source_id != 'Внебюджет') %>% group_by(olympic_type, exam_category) %>% summarise(n = n())
+
+current_exam_ege_mean <- current_entrants %>% filter(!is.na(enrolled_name), status_id == 4, education_source_id != 'Внебюджет') %>% group_by(olympic_type) %>% summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T))
 
 entrants2019 <- entrants %>% filter(year == 2019)
 
