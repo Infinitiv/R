@@ -5,9 +5,42 @@ path = 'api/stats'
 year = 2020
 entrants <- data.frame(fromJSON(paste(host, path, year, 'entrants', sep = '/')))
 
+path = 'api/campaigns'
+campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
+competitive_groups <- campaigns %>%
+  filter(campaigns.campaign_type_id == 1, campaigns.year_start == 2020) %>%
+  select(campaigns.competitive_groups)
+competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
+  select(name)
 
 
-enrolled_entrants <- entrants %>% 
+budget_entrants <- entrants %>%
+  filter(grepl('Бюджет|Квота|Целевые', competitive_groups))
+paid_entrants <- entrants %>%
+  filter(grepl('Внебюджет', competitive_groups))
+for(i in 1:length(competitive_groups_names[,1])){
+ print(paste(competitive_groups_names[,1][i], entrants %>% filter(education_document_date > as.Date('2019-10-01') ,education_document_type == 'SchoolCertificateDocument', grepl(as.character(competitive_groups_names[,1][i]), competitive_groups)) %>%
+   nrow(), sep= ' - '))
+}
+
+sum <- 0
+for(i in 1:length(competitive_groups_names[,1])){
+  sum <- sum + paid_entrants %>% filter(exam_category == 'ЕГЭ', grepl(as.character(competitive_groups_names[,1][i]), competitive_groups)) %>%
+    nrow()
+}
+
+entrants %>% filter(education_document_type == 'HighEduDiplomaDocument', grepl("Лечебное дело. Внебюджет.", competitive_groups)) %>%
+  nrow()
+entrants %>% filter(education_document_type == 'HighEduDiplomaDocument', grepl("Педиатрия. Внебюджет.", competitive_groups)) %>%
+  nrow()
+entrants %>% filter(education_document_type == 'HighEduDiplomaDocument', grepl("Стоматология. Внебюджет.", competitive_groups)) %>%
+  nrow()
+
+school_ege_entrants <- entrants %>%
+  group_by(education_document_type, exam_category) %>%
+  summarise(n = n())
+
+  enrolled_entrants <- entrants %>% 
   filter(!is.na(enrolled_name), status_id == 4)
 enrolled_entrants <- enrolled_entrants %>% 
   mutate(full_summa = sum + achievements, sum_ege = mean_ege*ege_count)
