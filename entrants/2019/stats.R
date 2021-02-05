@@ -2,8 +2,8 @@ library(tidyverse)
 library(jsonlite)
 host = 'http://priem.isma.ivanovo.ru'
 path = 'api/stats'
-year = 2020
-entrants <- data.frame(fromJSON(paste(host, path, year, 'entrants', sep = '/')))
+campaign = 8
+entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
 
 path = 'api/campaigns'
 campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
