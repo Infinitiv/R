@@ -12,7 +12,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output){
-  api_url <- 'http://priem.me/api/stats/'
+  api_url <- 'https://priem.isma.ivanovo.ru/api/stats/'
   campaigns = data.frame(fromJSON(paste(api_url, 'campaigns', sep = '/')))
   names(campaigns) <- c('id', 'name', 'year')
   
