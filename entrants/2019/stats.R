@@ -13,6 +13,48 @@ competitive_groups <- campaigns %>%
 competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
   select(name)
 
+#зачисленные поступающие
+enrolled_entrants <- entrants %>% 
+  filter(!is.na(enrolled_name), status_id == 4)
+#зачисленные поступающие - расчет общей суммы и суммы ЕГЭ
+enrolled_entrants <- enrolled_entrants %>% 
+  mutate(full_summa = sum + achievements, sum_ege = mean_ege*ege_count)
+#общее количество зачисленных
+c05 <- enrolled_entrants %>% group_by(direction_id) %>% summarise(n = n())
+#количество зачисленных на бюджет
+c06 <- enrolled_entrants %>% 
+  filter(grepl('Бюджет|Квота|Целевые', enrolled_name)) %>% 
+  group_by(direction_id) %>%
+  summarise(n = n())
+#количество зачисленных на внебюджет
+c09 <- enrolled_entrants %>% 
+  filter(grepl('Внебюджет', enrolled_name)) %>% 
+  group_by(direction_id) %>%
+  summarise(n = n())
+#количество зачисленных на целевые места
+c10 <- enrolled_entrants %>% 
+  filter(grepl('Целевые', enrolled_name)) %>% 
+  group_by(direction_id) %>%
+  summarise(n = n())
+#предыдущее образование получено в другом регионе
+с11
+#иностранные граждане всего
+c13 <- enrolled_entrants %>% 
+  filter(nationality_type_id != 1) %>% 
+  group_by(direction_id) %>%
+  summarise(n = n())
+#первое высшее образование
+c17 <- enrolled_entrants %>% 
+  filter(education_document_type != 'HighEduDiplomaDocument') %>% 
+  group_by(direction_id) %>%
+  summarise(n = n())
+c17_entrants <- enrolled_entrants %>% 
+  filter(education_document_type != 'HighEduDiplomaDocument')
+#первое высшее по результатам ЕГЭ на общий конкурс
+c18 <- c17_entrants %>%
+  filter(grepl('Бюджет|Внебюджет', enrolled_name), olympic_type != 'ЕГЭ 100', exam_category == 'ЕГЭ') %>%
+  group_by(direction_id) %>%
+  summarise(n = n())
 
 budget_entrants <- entrants %>%
   filter(grepl('Бюджет|Квота|Целевые', competitive_groups))
@@ -40,10 +82,7 @@ school_ege_entrants <- entrants %>%
   group_by(education_document_type, exam_category) %>%
   summarise(n = n())
 
-  enrolled_entrants <- entrants %>% 
-  filter(!is.na(enrolled_name), status_id == 4)
-enrolled_entrants <- enrolled_entrants %>% 
-  mutate(full_summa = sum + achievements, sum_ege = mean_ege*ege_count)
+
 
 gender_enrolled_entrants <- enrolled_entrants %>%
   group_by(direction_id, gender_id) %>%
