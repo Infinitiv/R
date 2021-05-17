@@ -13,6 +13,43 @@ competitive_groups <- campaigns %>%
 competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
   select(name)
 
+#1 мониторинг
+#выборки студентов
+#студенты, поступившие на бюджетную форму обучения
+c06_entrants <- enrolled_entrants %>% 
+  filter(grepl('Бюджет|Квота|Целевые', enrolled_name))
+#студенты, поступившие на платную форму обучения
+c09_entrants <- enrolled_entrants %>% 
+  filter(grepl('Внебюджет', enrolled_name))
+#студенты, поступившие в рамках целевой квоты
+c10_entrants <- enrolled_entrants %>% 
+  filter(grepl('Целевые', enrolled_name))
+#студенты, получившие предыдущее образование в другом регионе
+c11_entrants <- enrolled_entrants %>% 
+  filter(region_with_type != 'Ивановская обл' | is.na(region_with_type) == T)
+#иностранные студенты
+c13_entrants <- enrolled_entrants %>% 
+  filter(nationality != 1)
+#студенты с первым высшим образованием
+c17_entrants <- enrolled_entrants %>% 
+  filter(education_document_type != 'HighEduDiplomaDocument')
+#студенты с первым высшим по результам ЕГЭ на общий конкурс
+c18_entrants <- c17_entrants %>%
+  filter(grepl('Бюджет|Внебюджет', enrolled_name), exam_category == 'ЕГЭ', olympic_type != 'Без ВИ' | is.na(olympic_type) == T)
+#студенты с первым высшим на платную форму обучения
+c19_entrants <- c18_entrants %>%
+  filter(grepl('Внебюджет', enrolled_name))
+#студенты с первым высшим по результам ЕГЭ и дополнительных испытаний на общий конкурс
+c20_entrants <- c17_entrants %>%
+  filter(grepl('Бюджет|Внебюджет', enrolled_name), exam_category == 'смешанный', olympic_type != 'Без ВИ' | is.na(olympic_type) == T)
+#студенты с первым высшим по результам ЕГЭ и дополнительных испытаний на платную форму обучения
+c21_entrants <- c20_entrants %>%
+  filter(grepl('Внебюджет', enrolled_name))
+#студенты с первым высшим, поступившие без ВИ
+c22_entrants <- c17_entrants %>%
+  filter(grepl('Бюджет|Внебюджет', enrolled_name), olympic_type == 'Без ВИ')
+
+#расчет показателей
 #зачисленные поступающие
 enrolled_entrants <- entrants %>% 
   filter(!is.na(enrolled_name), status_id == 4)
@@ -20,41 +57,80 @@ enrolled_entrants <- entrants %>%
 enrolled_entrants <- enrolled_entrants %>% 
   mutate(full_summa = sum + achievements, sum_ege = mean_ege*ege_count)
 #общее количество зачисленных
-c05 <- enrolled_entrants %>% group_by(direction_id) %>% summarise(n = n())
+c05 <- enrolled_entrants %>% 
+  group_by(direction) %>% 
+  summarise(n = n())
 #количество зачисленных на бюджет
-c06 <- enrolled_entrants %>% 
-  filter(grepl('Бюджет|Квота|Целевые', enrolled_name)) %>% 
-  group_by(direction_id) %>%
+c06 <- c06_entrants %>% 
+  group_by(direction) %>%
   summarise(n = n())
 #количество зачисленных на внебюджет
-c09 <- enrolled_entrants %>% 
-  filter(grepl('Внебюджет', enrolled_name)) %>% 
-  group_by(direction_id) %>%
+c09 <- c09_entrants %>% 
+  group_by(direction) %>%
   summarise(n = n())
 #количество зачисленных на целевые места
-c10 <- enrolled_entrants %>% 
-  filter(grepl('Целевые', enrolled_name)) %>% 
-  group_by(direction_id) %>%
+c10 <- c10_entrants %>% 
+  group_by(direction) %>%
   summarise(n = n())
 #предыдущее образование получено в другом регионе
-с11
+c11 <- c11_entrants %>% 
+  group_by(direction) %>%
+  summarise(n = n())
 #иностранные граждане всего
-c13 <- enrolled_entrants %>% 
-  filter(nationality_type_id != 1) %>% 
-  group_by(direction_id) %>%
+c13 <- c13_entrants %>% 
+  group_by(direction) %>%
   summarise(n = n())
 #первое высшее образование
-c17 <- enrolled_entrants %>% 
-  filter(education_document_type != 'HighEduDiplomaDocument') %>% 
-  group_by(direction_id) %>%
+c17 <- c17_entrants %>%
+  group_by(direction) %>%
   summarise(n = n())
-c17_entrants <- enrolled_entrants %>% 
-  filter(education_document_type != 'HighEduDiplomaDocument')
 #первое высшее по результатам ЕГЭ на общий конкурс
-c18 <- c17_entrants %>%
-  filter(grepl('Бюджет|Внебюджет', enrolled_name), olympic_type != 'ЕГЭ 100', exam_category == 'ЕГЭ') %>%
-  group_by(direction_id) %>%
+c18 <- c18_entrants %>%
+  group_by(direction) %>%
   summarise(n = n())
+#первое высшее на платную форму обучения
+c19 <- c19_entrants %>%
+  group_by(direction) %>%
+  summarise(n = n())
+#первое высшее по результам ЕГЭ и дополнительных испытаний на общий конкурс
+c20 <- c20_entrants %>%
+  group_by(direction) %>%
+  summarise(n = n())
+#первое высшее по результам ЕГЭ и дополнительных испытаний на платную форму обучения
+c21 <- c21_entrants %>%
+  group_by(direction) %>%
+  summarise(n = n())
+#первое высшее без ВИ
+c22 <- c22_entrants %>%
+  group_by(direction) %>%
+  summarise(n = n())
+
+
+#средний балл ЕГЭ студентов бюджетной формы обучения, прнятых на обучение с учетом ЕГЭ
+c29 <- c18_entrants %>%
+  filter(grepl('Бюджет', enrolled_name)) %>%
+  group_by(direction) %>% 
+  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+#средний балл ЕГЭ студентов бюджетной формы обучения принятых на обучение с учетом ЕГЭ и дополнительных испытаний
+c30 <- c20_entrants %>%
+  filter(grepl('Бюджет', enrolled_name)) %>%
+  group_by(direction) %>% 
+  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+#средний балл ЕГЭ студентов платной формы обучения, прнятых на обучение с учетом ЕГЭ
+c31 <- c19_entrants %>%
+  filter(grepl('Внебюджет', enrolled_name)) %>%
+  group_by(direction) %>% 
+  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+#средний балл ЕГЭ студентов платной формы обучения принятых на обучение с учетом ЕГЭ и дополнительных испытаний
+c32 <- c21_entrants %>%
+  filter(grepl('Внебюджет', enrolled_name)) %>%
+  group_by(direction) %>% 
+  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+c33 <- c10_entrants %>%
+  group_by(direction) %>%
+  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+
+
 
 budget_entrants <- entrants %>%
   filter(grepl('Бюджет|Квота|Целевые', competitive_groups))
