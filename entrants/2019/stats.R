@@ -1,20 +1,46 @@
 library(tidyverse)
 library(jsonlite)
-host = 'http://priem.isma.ivanovo.ru'
+host = 'https://priem.isma.ivanovo.ru'
 path = 'api/stats'
-campaign = 7
+campaign = 9
 entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
+
+entrants$source <- as.factor(entrants$source)
 
 path = 'api/campaigns'
 campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
 competitive_groups <- campaigns %>%
-  filter(campaigns.campaign_type_id == 1, campaigns.year_start == 2020) %>%
+  filter(campaigns.campaign_type_id == 1, campaigns.year_start == 2021) %>%
   select(campaigns.competitive_groups)
 competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
-  select(name)
+  select(name, education_source_id) %>% filter(education_source_id == 14 | education_source_id == 16)
+
+print('подано зявлений через разные способы подачи документов')
+for(j in 1:length(levels(entrants$source))) {
+  source_name <- levels(entrants$source)[j]
+  sum <- 0
+  for(i in 1:length(competitive_groups_names[,1])){
+    name <- as.character(competitive_groups_names[,1][i])
+    sum <- sum + entrants %>% filter(source == source_name, grepl(name, competitive_groups)) %>%
+      nrow()
+  }
+  print(paste(source_name, sum, sep = ' '))
+}
+
+print('подано согласий')
+sum <- 0
+for(i in 1:length(levels(entrants$source))){
+  source_name <- levels(entrants$source)[i]
+  sum <- sum + entrants %>% filter(source == source_name, !is.na(agreement)) %>%
+    nrow()
+}
+print(paste(source_name, sum, sep = ' '))
 
 #1 мониторинг
 #выборки студентов
+#зачисленные поступающие
+enrolled_entrants <- entrants %>% 
+  filter(!is.na(enrolled_name), status_id == 4)
 #студенты, поступившие на бюджетную форму обучения
 c06_entrants <- enrolled_entrants %>% 
   filter(grepl('Бюджет|Квота|Целевые', enrolled_name))
@@ -29,7 +55,7 @@ c11_entrants <- enrolled_entrants %>%
   filter(region_with_type != 'Ивановская обл' | is.na(region_with_type) == T)
 #иностранные студенты
 c13_entrants <- enrolled_entrants %>% 
-  filter(nationality != 1)
+  filter(nationality != 'Российская Федерация')
 #студенты с первым высшим образованием
 c17_entrants <- enrolled_entrants %>% 
   filter(education_document_type != 'HighEduDiplomaDocument')
@@ -39,20 +65,23 @@ c18_entrants <- c17_entrants %>%
 #студенты с первым высшим на платную форму обучения
 c19_entrants <- c18_entrants %>%
   filter(grepl('Внебюджет', enrolled_name))
-#студенты с первым высшим по результам ЕГЭ и дополнительных испытаний на общий конкурс
-c20_entrants <- c17_entrants %>%
-  filter(grepl('Бюджет|Внебюджет', enrolled_name), exam_category == 'смешанный', olympic_type != 'Без ВИ' | is.na(olympic_type) == T)
-#студенты с первым высшим по результам ЕГЭ и дополнительных испытаний на платную форму обучения
-c21_entrants <- c20_entrants %>%
-  filter(grepl('Внебюджет', enrolled_name))
 #студенты с первым высшим, поступившие без ВИ
 c22_entrants <- c17_entrants %>%
   filter(grepl('Бюджет|Внебюджет', enrolled_name), olympic_type == 'Без ВИ')
+#студенты с первым высшим, принятые по результам ЕГЭ на бюджетную форму обучения
+c29_entrants <- c18_entrants %>%
+  filter(grepl('Бюджет', enrolled_name))
+#студенты с первым высшим, принятые по результатам ЕГЭ на внебюджетную форму обучения
+c31_entrants <- c19_entrants %>%
+  filter(grepl('Внебюджет', enrolled_name))
+#студенты с первым высшим, принятые по результатам ЕГЭ на целевые места
+c33_entrants <- c10_entrants %>%
+  filter(exam_category == 'ЕГЭ', olympic_type != 'Без ВИ' | is.na(olympic_type) == T)
+#студенты, принятые на бюджет из числа получивших предыдущее образование в другом регионе
+c36_entrants <- c11_entrants %>%
+  filter(grepl('Бюджет|Квота|Целевые', enrolled_name))
 
 #расчет показателей
-#зачисленные поступающие
-enrolled_entrants <- entrants %>% 
-  filter(!is.na(enrolled_name), status_id == 4)
 #зачисленные поступающие - расчет общей суммы и суммы ЕГЭ
 enrolled_entrants <- enrolled_entrants %>% 
   mutate(full_summa = sum + achievements, sum_ege = mean_ege*ege_count)
@@ -92,45 +121,29 @@ c18 <- c18_entrants %>%
 c19 <- c19_entrants %>%
   group_by(direction) %>%
   summarise(n = n())
-#первое высшее по результам ЕГЭ и дополнительных испытаний на общий конкурс
-c20 <- c20_entrants %>%
-  group_by(direction) %>%
-  summarise(n = n())
-#первое высшее по результам ЕГЭ и дополнительных испытаний на платную форму обучения
-c21 <- c21_entrants %>%
-  group_by(direction) %>%
-  summarise(n = n())
 #первое высшее без ВИ
 c22 <- c22_entrants %>%
   group_by(direction) %>%
   summarise(n = n())
-
-
 #средний балл ЕГЭ студентов бюджетной формы обучения, прнятых на обучение с учетом ЕГЭ
-c29 <- c18_entrants %>%
-  filter(grepl('Бюджет', enrolled_name)) %>%
-  group_by(direction) %>% 
-  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
-#средний балл ЕГЭ студентов бюджетной формы обучения принятых на обучение с учетом ЕГЭ и дополнительных испытаний
-c30 <- c20_entrants %>%
-  filter(grepl('Бюджет', enrolled_name)) %>%
+c29 <- c29_entrants %>%
   group_by(direction) %>% 
   summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
 #средний балл ЕГЭ студентов платной формы обучения, прнятых на обучение с учетом ЕГЭ
-c31 <- c19_entrants %>%
-  filter(grepl('Внебюджет', enrolled_name)) %>%
+c31 <- c31_entrants %>%
   group_by(direction) %>% 
   summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
-#средний балл ЕГЭ студентов платной формы обучения принятых на обучение с учетом ЕГЭ и дополнительных испытаний
-c32 <- c21_entrants %>%
-  filter(grepl('Внебюджет', enrolled_name)) %>%
-  group_by(direction) %>% 
-  summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
-c33 <- c10_entrants %>%
+#средний балл ЕГЭ студентов, принятых на целевое обучение с учетом ЕГЭ
+c33 <- c33_entrants %>%
   group_by(direction) %>%
   summarise(mean_mean_ege = mean(mean_ege, na.rm = T))
+#количество студентов, получивших предыдущее образование в другом регионе и поступившие на бюджет
+c36 <- c36_entrants %>%
+  group_by(direction) %>%
+  summarise(n = n())
 
-
+write.csv(c18_entrants, '~/c18_entrants.csv')
+write.csv(c19_entrants, '~/c19_entrants.csv')
 
 budget_entrants <- entrants %>%
   filter(grepl('Бюджет|Квота|Целевые', competitive_groups))
