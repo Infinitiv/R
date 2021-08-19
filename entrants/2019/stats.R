@@ -2,13 +2,15 @@ library(tidyverse)
 library(jsonlite)
 host = 'http://priem.isma.ivanovo.ru'
 path = 'api/stats'
-campaign = 7
+campaign = 9
 entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
+
+entrants %>% group_by(registration_date) %>% summarise(n = n())
 
 path = 'api/campaigns'
 campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
 competitive_groups <- campaigns %>%
-  filter(campaigns.campaign_type_id == 1, campaigns.year_start == 2020) %>%
+  filter(campaigns.campaign_type_id == 1, campaigns.year_start == 2021) %>%
   select(campaigns.competitive_groups)
 competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
   select(name)
