@@ -15,6 +15,9 @@ competitive_groups <- campaigns %>%
 competitive_groups_names <- as.data.frame(competitive_groups$campaigns.competitive_groups) %>% 
   select(name, education_source_id) %>% filter(education_source_id == 14 | education_source_id == 16)
 
+
+tmp <- entrants %>% filter(!is.na(return_documents_date), source != 'через ЕПГУ')
+
 print('подано зявлений через разные способы подачи документов')
 for(j in 1:length(levels(entrants$source))) {
   source_name <- levels(entrants$source)[j]
@@ -28,13 +31,40 @@ for(j in 1:length(levels(entrants$source))) {
 }
 
 print('подано согласий')
-sum <- 0
-for(i in 1:length(levels(entrants$source))){
-  source_name <- levels(entrants$source)[i]
-  sum <- sum + entrants %>% filter(source == source_name, !is.na(agreement)) %>%
-    nrow()
+for(j in 1:length(levels(entrants$source))) {
+  source_name <- levels(entrants$source)[j]
+  sum <- 0
+  for(i in 1:length(competitive_groups_names[,1])){
+    name <- as.character(competitive_groups_names[,1][i])
+    sum <- sum + entrants %>% filter(source == source_name, grepl(name, competitive_groups), agreement == name) %>%
+      nrow()
+  }
+  print(paste(source_name, sum, sep = ' '))
 }
-print(paste(source_name, sum, sep = ' '))
+
+print('количество отзывов')
+for(j in 1:length(levels(entrants$source))) {
+  source_name <- levels(entrants$source)[j]
+  sum <- 0
+  for(i in 1:length(competitive_groups_names[,1])){
+    name <- as.character(competitive_groups_names[,1][i])
+    sum <- sum + entrants %>% filter(source == source_name, grepl(name, competitive_groups), !is.na(return_documents_date)) %>%
+      nrow()
+  }
+  print(paste(source_name, sum, sep = ' '))
+}
+
+print('зачислено через разные способы подачи документов')
+for(j in 1:length(levels(enrolled_entrants$source))) {
+  source_name <- levels(enrolled_entrants$source)[j]
+  sum <- 0
+  for(i in 1:length(competitive_groups_names[,1])){
+    name <- as.character(competitive_groups_names[,1][i])
+    sum <- sum + enrolled_entrants %>% filter(source == source_name, name == enrolled_name) %>%
+      nrow()
+  }
+  print(paste(source_name, sum, sep = ' '))
+}
 
 #1 мониторинг
 #выборки студентов
