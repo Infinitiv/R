@@ -3,7 +3,9 @@ df <- read.csv('~/R/data/shershneva/data.csv', header = T)
 
 age <- df %>% group_by(группа) %>% summarise(mean = mean_se(возраст)) 
 age$mean$y - age$mean$ymin
-df$механизм.травмы <- as.factor(df$механизм.травмы)
+
+kruskal.test(df$возраст, df$группа)
+
 fisher.test(df$механизм.травмы, df$группа)$p.value
 
 fisher.test(df$давность.травмы, df$группа)$p.value
@@ -46,7 +48,7 @@ fisher.test(df$рентгенологически.перилунарный.вы�
 
 fisher.test(df$контраст.проникает.в.SL.при.артрографии, df$группа)$p.value
 
-d1 <- matrix(c(49, 62, 145, 22, 19, 30, 15, 18), nrow = 2, ncol = 4)
-fisher.test(d1)
+d <- matrix(c(49, 62, 145, 22, 19, 30, 15, 18), nrow = 2, ncol = 4)
+fisher.test(d)
 
 fisher.test(df$отдален..ВАШ, df$группа)$p.value
