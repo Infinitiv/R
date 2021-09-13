@@ -38,12 +38,48 @@ names(df1) <- c('Вуз', 'ЕГЭ', 'Форма', 'Год')
 df1$ЕГЭ <- as.numeric(as.character(df1$ЕГЭ))
 df1$Год <- as.factor(df1$Год)
 df1 <- df1 %>% arrange(Форма, Год, desc(ЕГЭ))
-names(df2) <- c('Укрупненная группа', 'Вуз', 'ЕГЭ', 'Форма', 'Год')
+names(df2) <- c('Группа', 'Вуз', 'ЕГЭ', 'Форма', 'Год')
 df2$ЕГЭ <- as.numeric(df2$ЕГЭ)
 df2$Год <- as.factor(df2$Год)
 df2 <- df2 %>% arrange(Форма, Год, desc(ЕГЭ))
 write.csv(df1, file = '~/R/data/hse/data1.csv', row.names = F)
 write.csv(df2, file = '~/R/data/hse/data2.csv', row.names = F)
 
-tmp <- subset(df1, Год == 2020 & Форма == 'внебюджет')
-which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+ranks <- data.frame(matrix(ncol = 5, nrow = 0))
+names(ranks) <- c('Год', 'Тип', 'Форма', 'Количество', 'Место')
+
+for(i in 1:length(levels(df1$Год))){
+  year <- levels(df1$Год)[i]
+  # общий бюджет
+  tmp <- subset(df1, Год == year & Форма == 'бюджет')
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'общий', Форма = 'бюджет', Количество = n_inst, Место = rank))
+  # общий внебюджет
+  tmp <- subset(df1, Год == year & Форма == 'внебюджет')
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'общий', Форма = 'внебюджет', Количество = n_inst, Место = rank))
+  # общий бюджет Иваново
+  tmp <- subset(df1, Год == year & Форма == 'бюджет' & grepl('Ивановск', Вуз))
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'региональный', Форма = 'бюджет', Количество = n_inst, Место = rank))
+  # общий внебюджет Иваново
+  tmp <- subset(df1, Год == year & Форма == 'внебюджет' & grepl('Ивановск', Вуз))
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'региональный', Форма = 'внебюджет', Количество = n_inst, Место = rank))
+  # по направлению бюджет
+  tmp <- subset(df2, Год == year & Форма == 'бюджет' & Группа == 'Здравоохранение')
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'здравоохранение', Форма = 'бюджет', Количество = n_inst, Место = rank))
+  # по направлению внебюджет
+  tmp <- subset(df2, Год == year & Форма == 'внебюджет'  & Группа == 'Здравоохранение')
+  n_inst <- tmp %>% nrow()
+  rank <- which(tmp$Вуз == 'Ивановская гос. медицинская академия')
+  ranks <- rbind(ranks, data.frame(Год = year, Тип = 'здравоохранение', Форма = 'внебюджет', Количество = n_inst, Место = rank))
+}
+
+write.csv(ranks, file = '~/R/data/hse/ranks.csv', row.names = F)
