@@ -82,4 +82,8 @@ for(i in 1:length(levels(df1$Год))){
   ranks <- rbind(ranks, data.frame(Год = year, Тип = 'здравоохранение', Форма = 'внебюджет', Количество = n_inst, Место = rank))
 }
 
+ranks <- ranks %>% mutate(Процентиль = round(Место*100/Количество))
+
+ggplot(ranks, aes(y = Процентиль, x = Год, col = Форма)) + geom_point() + facet_wrap(~Тип)
+
 write.csv(ranks, file = '~/R/data/hse/ranks.csv', row.names = F)

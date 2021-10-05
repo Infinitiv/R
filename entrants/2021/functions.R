@@ -25,6 +25,21 @@ entrants %>% filter(grepl('Лечебное дело. Бюджет.', competitiv
 entrants %>% filter(grepl('Лечебное дело. Внебюджет.', competitive_groups)) %>% nrow()
 entrants %>% filter(grepl('Лечебное дело. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarise(n = n())
 
+entrants %>% filter(grepl('Лечебное дело. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Лечебное дело. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Лечебное дело. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Лечебное дело. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Лечебное дело. Бюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Лечебное дело. Целевые места.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Лечебное дело. Квота особого права.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Лечебное дело. Внебюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Лечебное дело. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Лечебное дело. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Лечебное дело. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Лечебное дело. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
 entrants %>% filter(grepl('Лечебное дело. Целевые места.', competitive_groups)) %>% nrow()
 entrants %>% filter(grepl('Лечебное дело. Квота особого права.', competitive_groups)) %>% nrow()
 entrants %>% filter(grepl('Лечебное дело. Квота особого права.', competitive_groups), benefit_document_type == 'Инвалид') %>% nrow()
@@ -35,11 +50,14 @@ c06_entrants %>% filter(grepl('Лечебное дело', enrolled_name)) %>% g
 c06_entrants %>% filter(grepl('Лечебное дело', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Лечебное дело', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Лечебное дело', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument') %>% group_by(exam_category) %>% summarise(n = n())
 
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
@@ -56,6 +74,8 @@ c06_entrants %>% filter(grepl('Лечебное дело. Целевые мес�
 c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% group_by(enrolled_name, exam_category) %>% summarise(n = n())
 entrants %>% filter(grepl('Лечебное дело. Целевые места.', exeptioned_name)) %>% group_by(exeptioned_name, exam_category) %>% summarise(n = n())
@@ -68,6 +88,8 @@ entrants %>% filter(grepl('Лечебное дело. Бюджет.', exeptioned
 c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 entrants %>% filter(grepl('Лечебное дело. Внебюджет.', exeptioned_name)) %>% group_by(exam_category) %>% summarise(n = n())
@@ -75,11 +97,16 @@ c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', 
 c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% group_by(achievements) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Лечебное дело. Бюджет.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Лечебное дело. Целевые места.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Лечебное дело. Квота особого права.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Лечебное дело. Внебюджет.', enrolled_name)) %>% group_by(education_document_type, exam_category) %>% summarise(n = n(), mean_ege = mean(mean_ege))
+
+enrolled_entrants %>% filter(!is.na(benefit_type)) %>% group_by(education_source_id) %>% summarise(n = n())
+enrolled_entrants %>% group_by(education_document_type) %>% summarise(n = n())
 
 print('подано зявлений для разных заказчиков целевой подготовки')
 for(i in 1:length(target_competitive_groups_names$name)) {
@@ -99,6 +126,21 @@ entrants %>% filter(grepl('Педиатрия. Квота особого пра�
 entrants %>% filter(grepl('Педиатрия. Внебюджет.', competitive_groups), benefit_document_type == 'Инвалид') %>% nrow()
 entrants %>% filter(grepl('Педиатрия. Квота особого права.', competitive_groups), benefit_document_type == 'Сирота') %>% nrow()
 
+entrants %>% filter(grepl('Педиатрия. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Педиатрия. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Педиатрия. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Педиатрия. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Педиатрия. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Педиатрия. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Педиатрия. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Педиатрия. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Педиатрия. Бюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Педиатрия. Целевые места.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Педиатрия. Квота особого права.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Педиатрия. Внебюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+
 c06_entrants %>% filter(grepl('Педиатрия', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Педиатрия', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Педиатрия', enrolled_name)) %>% summarise(mean = mean(achievements))
@@ -108,6 +150,8 @@ c06_entrants %>% filter(grepl('Педиатрия. Квота особого п�
 c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Педиатрия. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
@@ -124,6 +168,8 @@ entrants %>% filter(grepl('Педиатрия. Целевые места.', exep
 c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Педиатрия. Целевые места.', enrolled_name)) %>% group_by(enrolled_name, exam_category) %>% summarise(n = n())
 entrants %>% filter(grepl('Педиатрия. Целевые места.', exeptioned_name)) %>% group_by(exeptioned_name, exam_category) %>% summarise(n = n())
@@ -136,12 +182,16 @@ c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', exeptioned_na
 c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', exeptioned_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Педиатрия. Бюджет.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Педиатрия. Внебюджет.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
@@ -160,6 +210,21 @@ entrants %>% filter(grepl('Стоматология. Квота особого �
 entrants %>% filter(grepl('Стоматология. Внебюджет.', competitive_groups), benefit_document_type == 'Инвалид') %>% nrow()
 entrants %>% filter(grepl('Стоматология. Квота особого права.', competitive_groups), benefit_document_type == 'Сирота') %>% nrow()
 
+entrants %>% filter(grepl('Стоматология. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Стоматология. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Стоматология. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(grepl('Стоматология. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Стоматология. Бюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Стоматология. Целевые места.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Стоматология. Квота особого права.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+entrants %>% filter(education_document_date > as.Date('2020-09-30'), grepl('Стоматология. Внебюджет.', competitive_groups)) %>% group_by(education_document_type) %>% summarize(n = n())
+
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Стоматология. Бюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Стоматология. Целевые места.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Стоматология. Квота особого права.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument', grepl('Стоматология. Внебюджет.', competitive_groups)) %>% group_by(exam_category) %>% summarize(n = n())
+
 c06_entrants %>% filter(grepl('Стоматология', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Стоматология', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Стоматология', enrolled_name)) %>% summarise(mean = mean(achievements))
@@ -169,6 +234,8 @@ c06_entrants %>% filter(grepl('Стоматология. Квота особог
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name), benefit_document_type == 'Инвалид') %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
@@ -185,18 +252,24 @@ c06_entrants %>% filter(grepl('Стоматология. Целевые мест
 c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', exeptioned_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', exeptioned_name)) %>% group_by(exam_category) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% group_by(exam_category) %>% summarise(mean = mean(mean_ege))
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(achievements))
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% mutate(full_sum = sum + achievements) %>% summarise(min = min(full_sum))
+c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% summarise(mean_min = mean(min(biology_value), min(chemistry_value), min(russian_value)))
+c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% summarise(mean = mean(sum/3))
 
 c06_entrants %>% filter(grepl('Стоматология. Бюджет.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
@@ -204,6 +277,14 @@ c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', e
 c06_entrants %>% filter(grepl('Стоматология. Целевые места.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c06_entrants %>% filter(grepl('Стоматология. Квота особого права.', enrolled_name)) %>% group_by(education_document_type) %>% summarise(n = n())
 c09_entrants %>% filter(grepl('Стоматология. Внебюджет.', enrolled_name)) %>% group_by(education_document_type, exam_category) %>% summarise(n = n(), mean_ege = mean(mean_ege), mean_ach = mean(achievements))
+
+enrolled_entrants %>% filter(education_source_id != 15) %>% group_by(education_document_type) %>% summarize(n = n())
+enrolled_entrants %>% filter(education_source_id == 15) %>% group_by(education_document_type) %>% summarize(n = n())
+enrolled_entrants %>% filter(education_document_date > as.Date('2020-09-30'), education_source_id != 15) %>% group_by(education_document_type) %>% summarize(n = n())
+enrolled_entrants %>% filter(education_document_date > as.Date('2020-09-30'), education_source_id == 15) %>% group_by(education_document_type) %>% summarize(n = n())
+
+c06_entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument') %>% group_by(exam_category) %>% summarise(n = n())
+c09_entrants %>% filter(education_document_type == 'MiddleEduDiplomaDocument' | education_document_type == 'SchoolCertificateDocument') %>% group_by(exam_category) %>% summarise(n = n())
 
 
 print('подано зявлений через разные способы подачи документов')
@@ -566,3 +647,5 @@ f_3_3 <- enrolled_entrants %>%
   filter(benefit_document_type == 'Сирота') %>%
   group_by(enrolled_name) %>%
   summarise(mean_ege = mean(mean_ege, na.rm = T))
+
+write.csv(enrolled_entrants, '~/2021.csv')
