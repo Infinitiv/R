@@ -2,7 +2,7 @@ library(tidyverse)
 library(jsonlite)
 host = 'https://priem.isma.ivanovo.ru'
 path = 'api/stats'
-campaign = 9
+campaign = 10
 entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
 
 entrants$source <- as.factor(entrants$source)
