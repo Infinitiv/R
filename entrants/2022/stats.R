@@ -1,11 +1,54 @@
 library(tidyverse)
 library(jsonlite)
-host = 'https://priem.isma.ivanovo.ru'
+host = 'https://priem.ivgma.ru'
 path = 'api/stats'
-campaign = 9
-entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
+campaign = 1
+entrant_applications <- data.frame(fromJSON(paste(host, path, campaign, 'entrant_applications', sep = '/')))
 
-entrants$source <- as.factor(entrants$source)
+entrant_applications <- entrant_applications %>% filter(stage != 2)
+
+entrant_applications <- entrant_applications %>% 
+  arrange(application_number) %>%
+  mutate(mean = round(sum/test_count, 2), 
+         mean_ege = round(sum_ege/ege_count, 2), 
+         sum_exam = sum - sum_ege,
+         exam_count = test_count - ege_count,
+         mean_exam = round(sum_exam/exam_count, 2))
+
+entrant_applications$source <- as.factor(entrant_applications$source)
+print('По специальностям и источникам подачи - всего')
+entrant_applications %>% group_by(source) %>% summarise(n = n())
+print('По специальностям и источникам подачи - бюджет')
+entrant_applications %>% filter(education_source != 'С оплатой обучения') %>% group_by(direction, source) %>% summarise(n = n())
+print('По специальностям и источникам подачи - внебюджет')
+entrant_applications %>% filter(education_source == 'С оплатой обучения') %>% group_by(direction, source) %>% summarise(n = n())
+print('По специальностям и источникам обучения')
+entrant_applications %>% group_by(direction, education_source) %>% summarise(n = n())
+print('Инвалиды по специальностям')
+entrant_applications %>% filter(grepl('инвалид', benefit_documents), education_source != 'С оплатой обучения') %>% group_by(direction) %>% summarise(n = n())
+entrant_applications %>% filter(grepl('инвалид', benefit_documents), education_source == 'С оплатой обучения') %>% group_by(direction) %>% summarise(n = n())
+print('Специальная квота')
+entrant_applications %>% filter(grepl('Специальная квота', competitive_group_name)) %>% group_by(direction) %>% summarise(n = n())
+
+
+enrolled <- entrant_applications %>% filter(!is.na(enrolled_date))
+
+competitive_groups_group <- enrolled %>% 
+  filter(education_source != 'С оплатой обучения') %>% 
+  group_by(competitive_group_name) %>% 
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+
+education_source_group <- enrolled %>% 
+  filter(education_source != 'С оплатой обучения') %>% 
+  group_by(direction, education_source, test_type) %>% 
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+
+
+
+
+
+
+
 
 path = 'api/campaigns'
 campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
