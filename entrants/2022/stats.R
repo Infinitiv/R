@@ -7,6 +7,12 @@ entrant_applications <- data.frame(fromJSON(paste(host, path, campaign, 'entrant
 
 entrant_applications <- entrant_applications %>% filter(stage != 2)
 
+entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
+
+write.csv2(entrants, '~/entrants2022.csv')
+
+
+
 entrant_applications <- entrant_applications %>% 
   arrange(application_number) %>%
   mutate(mean = round(sum/test_count, 2), 
@@ -34,18 +40,17 @@ entrant_applications %>% filter(grepl('Специальная квота', compe
 enrolled <- entrant_applications %>% filter(!is.na(enrolled_date))
 
 competitive_groups_group <- enrolled %>% 
-  filter(education_source != 'С оплатой обучения') %>% 
   group_by(competitive_group_name) %>% 
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
 
 education_source_group <- enrolled %>% 
-  filter(education_source != 'С оплатой обучения') %>% 
+  filter(education_source == 'С оплатой обучения') %>% 
   group_by(direction, education_source, test_type) %>% 
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
 
 olympionics <- entrant_applications %>% 
   filter(grepl('Приравнивание к лицам, набравшим максимальное количество баллов по ЕГЭ', benefits)) %>% group_by(direction, education_source) %>%
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
 
 
 target_applications <- entrant_applications %>% 
@@ -54,11 +59,17 @@ target_applications <- entrant_applications %>%
 
 target_enrolled <- enrolled %>% 
   group_by(direction, competitive_group_name) %>%
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
 
 achievemnts <- enrolled %>%
+  filter(education_source == 'С оплатой обучения') %>%
   group_by(direction, education_source, achievements) %>%
   summarise(n = n())
+
+achievemnts_mean <- enrolled %>%
+  filter(education_source == 'С оплатой обучения') %>%
+  group_by(direction) %>%
+  summarise(mean = mean(achievement_sum))
 
 education_applications <- entrant_applications %>% 
   group_by(direction, education_source, education_document) %>%
@@ -66,12 +77,21 @@ education_applications <- entrant_applications %>%
 
 education_enrolled <- enrolled %>% 
   group_by(direction, education_source, education_document, test_type) %>%
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
 
 directions <- enrolled %>%
-  filter(education_source != 'С оплатой обучения') %>%
+  filter(education_source == 'С оплатой обучения') %>%
   group_by(direction) %>%
-  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(sum))
+  summarise(n = n(), mean_ege = mean(mean_ege, na.rm = T), mean_exam = mean(mean_exam, na.rm = T), mean_ach = mean(achievement_sum, na.rm = T), min = min(full_sum))
+
+disabled <- enrolled %>%
+  filter(grepl('инвалид', benefit_documents), education_source == 'С оплатой обучения') %>% 
+  group_by(direction, competitive_group_name) %>% 
+  summarise(n = n(), mean = mean(mean_ege))
+
+nationality <- enrolled %>%
+  group_by(direction,education_source, nationality) %>% 
+  summarise(n = n(), mean = mean(mean_ege))
 
 path = 'api/campaigns'
 campaigns <- data.frame(fromJSON(paste(host, path, sep = '/')))
@@ -658,7 +678,7 @@ exam_category <- enrolled_entrants %>%
 
 mean_ege <- enrolled_entrants %>% 
   group_by(enrolled_name) %>% 
-  filter(exam_category == 'ЕГЭ', sum == min(sum)) %>% 
+  filter(exam_category == 'ЕГЭ', sum == min(full_sum)) %>% 
   summarise(mean_ege = mean(mean_ege, na.rm = T))
 
 mean_ege_exam <- enrolled_entrants %>% 
@@ -669,7 +689,7 @@ mean_ege_exam <- enrolled_entrants %>%
 f_21_6 <- enrolled_entrants %>% 
   filter(is.na(olympic_type)) %>% 
   group_by(enrolled_name) %>% 
-  filter(exam_category == 'ЕГЭ', sum == min(sum)) %>% 
+  filter(exam_category == 'ЕГЭ', sum == min(full_sum)) %>% 
   summarise(mean_ege = mean(mean_ege, na.rm = T))
 
 f_1_2 <- enrolled_entrants %>% 
@@ -695,7 +715,7 @@ f_2_1_o <- enrolled_entrants %>%
 f_21_6 <- enrolled_entrants %>% 
   filter(is.na(olympic_type)) %>% 
   group_by(enrolled_name) %>% 
-  filter(exam_category == 'ЕГЭ', sum == min(sum)) %>% 
+  filter(exam_category == 'ЕГЭ', sum == min(full_sum)) %>% 
   summarise(mean_ege = mean(mean_ege, na.rm = T))
 f_21_8 <- enrolled_entrants %>% 
   filter(is.na(olympic_type), exam_category != 'ВИ') %>% 
