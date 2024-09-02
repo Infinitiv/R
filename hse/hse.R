@@ -83,7 +83,13 @@ for(i in 1:length(levels(df1$Год))){
 }
 
 ranks <- ranks %>% mutate(Процентиль = round(Место*100/Количество))
+ranks_med <- ranks %>% filter(Тип == 'здравоохранение')
 
-ggplot(ranks, aes(y = Процентиль, x = Год, col = Форма)) + geom_point() + facet_wrap(~Тип)
+ggplot(ranks, aes(y = Процентиль, x = Год, group = Форма, col = Форма)) + 
+  geom_point() +
+  geom_line() +
+  scale_y_reverse() +
+  facet_wrap(~Тип) +
+  theme_minimal()
 
 write.csv(ranks, file = '~/R/data/hse/ranks.csv', row.names = F)
