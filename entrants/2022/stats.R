@@ -2,7 +2,7 @@ library(tidyverse)
 library(jsonlite)
 host = 'https://priem.ivgmu.ru'
 path = 'api/stats'
-campaign = 4
+campaign = 3
 entrant_applications <- data.frame(fromJSON(paste(host, path, campaign, 'entrant_applications', sep = '/')))
 
 entrant_applications <- entrant_applications %>% filter(stage != 0)
@@ -22,6 +22,21 @@ entrant_applications <- entrant_applications %>%
 enrolled <- entrant_applications %>%
   filter(!is.na(enrolled_date)) %>%
   group_by(direction, basis) %>%
+  summarise(n = n())
+
+vpo_1_2_1_1_min <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, education_source) %>%
+  summarise(
+    min_1 = min(ifelse(test_type_1 == 'ЕГЭ', mark_1, NA), na.rm = TRUE),
+    min_2 = min(ifelse(test_type_1 == 'ЕГЭ', mark_2, NA), na.rm = TRUE),
+    min_3 = min(ifelse(test_type_1 == 'ЕГЭ', mark_3, NA), na.rm = TRUE),
+    mean = sum(c(min_1, min_2, min_3))/3
+  )
+
+vpo_2_3 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), education_source == 'Целевая квота') %>%
+  group_by(competitive_group_name) %>%
   summarise(n = n())
 
 f_2_1 <- entrant_applications %>%
