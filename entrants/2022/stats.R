@@ -1,20 +1,12 @@
 library(tidyverse)
 library(jsonlite)
-host = 'https://priem.ivgma.ru'
+host = 'https://priem.ivgmu.ru'
 path = 'api/stats'
-campaign = 1
+campaign = 4
 entrant_applications <- data.frame(fromJSON(paste(host, path, campaign, 'entrant_applications', sep = '/')))
 
 entrant_applications <- entrant_applications %>% filter(stage != 0)
 entrant_applications$education_document_date <- as.Date(entrant_applications$education_document_date)
-
-entrants <- data.frame(fromJSON(paste(host, path, campaign, 'entrants', sep = '/')))
-
-write.csv2(entrants, '~/entrants2023.csv')
-
-country <- entrant_applications %>% filter(nationality != 'Российская Федерация') %>% group_by(direction, education_source, nationality) %>% summarise(n = n())
-country_enrolled <- enrolled %>% filter(nationality != 'Российская Федерация') %>% group_by(direction, education_source, nationality) %>% summarise(n = n())
-
 
 entrant_applications <- entrant_applications %>% 
   arrange(application_number) %>%
@@ -24,13 +16,142 @@ entrant_applications <- entrant_applications %>%
          exam_count = test_count - ege_count,
          mean_exam = round(sum_exam/exam_count, 2))
 
-# для департамента образования
-budget_entrant_applications <- entrant_applications %>%
-  filter(education_source != 'По договору об оказании платных образовательных услуг') %>%
-  group_by(education_source) %>%
+entrant_applications <- entrant_applications %>%
+  mutate(basis = ifelse(education_source == 'По договору об оказании платных образовательных услуг', 'Внебюджет', 'Бюджет'))
+
+enrolled <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, basis) %>%
   summarise(n = n())
 
-entrant_applications$source <- as.factor(entrant_applications$source)
+f_2_1 <- entrant_applications %>%
+  group_by(direction, basis) %>%
+  summarise(
+    n = n(),
+    count_special = sum(education_source == 'Особая квота'),
+    count_separated = sum(education_source == 'Отдельная квота'),
+    count_target = sum(education_source == 'Целевая квота'),
+    count_common = sum(education_source == 'Основные места в рамках КЦП' | education_source == 'По договору об оказании платных образовательных услуг'),
+    count_epgu = sum(source == 'через ЕПГУ'),
+    count_personal = sum(source == 'лично'),
+    count_is = sum(source == 'через ИС'),
+    count_disabled = sum(grepl('инвалид', benefit_documents, ignore.case = T)),
+    count_svo = sum(grepl('СВО', benefit_documents))
+    )
+
+f_3_2 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), education_source == 'Особая квота') %>%
+  group_by(direction) %>%
+  summarise(
+    n = n(),
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_college = sum(grepl('диплом', education_document, ignore.case = T)), 
+    count_ege = sum(test_type == 'ЕГЭ'),
+    count_exam = sum(test_type == 'ВИ'),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ'),
+    count_disabled = sum(grepl('инвалид', benefit_documents, ignore.case = T)),
+    count_orphan = sum(grepl('сирот', benefit_documents, ignore.case = T)),
+    )
+
+f_3_3 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), education_source == 'Целевая квота') %>%
+  group_by(direction) %>%
+  summarise(
+    n = n(),
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_college = sum(grepl('диплом', education_document, ignore.case = T)), 
+    count_ege = sum(test_type == 'ЕГЭ'),
+    count_exam = sum(test_type == 'ВИ'),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ')
+  )
+
+f_3_4 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), (education_source == 'Основные места в рамках КЦП' | education_source == 'По договору об оказании платных образовательных услуг')) %>%
+  group_by(direction, basis) %>%
+  summarise(
+    n = n(),
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)), 
+    count_ege = sum(test_type == 'ЕГЭ'),
+    count_exam = sum(test_type == 'ВИ'),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ')
+  )
+
+f_3_5 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), education_source == 'Отдельная квота') %>%
+  group_by(direction, examless_type) %>%
+  summarise(
+    n = n(),
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)), 
+    count_ege = sum(test_type == 'ЕГЭ'),
+    count_exam = sum(test_type == 'ВИ'),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ')
+  )
+
+f_3_7 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), nationality != 'РОССИЯ') %>%
+  group_by(direction, basis, nationality) %>%
+  summarise(n = n())
+
+f_4_1 <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, education_source) %>%
+  summarise(
+    mean_ege = round(mean(mean_ege, na.rm = T), 2)
+  )
+
+f_4_2 <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, basis) %>%
+  summarise(
+    count_3 = sum(grepl('ГТО', achievements)),
+    count_5 = sum(grepl('аттестат|диплом', achievements, ignore.case = T)),
+    count_7 = sum(grepl('олимпиады|конкурса', achievements, ignore.case = T)),
+    count_9 = sum(grepl('Абилимпикс', achievements, ignore.case = T)),
+    count_11 = sum(grepl('За особые успехи в учении', achievements, ignore.case = T)),
+    count_12 = sum(grepl('Прохождение', achievements, ignore.case = T)),
+    count_13 = sum(grepl('Пребывание', achievements, ignore.case = T)),
+  )
+
+f_4_3 <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, education_source) %>%
+  summarise(
+    min = (min(full_sum))
+  )
+
+f_4_4_1 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), test_type_1 == 'ЕГЭ') %>%
+  group_by(direction, education_source, test_subject_1) %>%
+  summarise(
+    n = n(),
+    mean_ege = round(mean(mark_1, na.rm = T), 2)
+  )
+
+f_4_4_2 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), test_type_2 == 'ЕГЭ') %>%
+  group_by(direction, education_source, test_subject_2) %>%
+  summarise(
+    n = n(),
+    mean_ege = round(mean(mark_2, na.rm = T), 2)
+  )
+
+f_4_4_3 <- entrant_applications %>%
+  filter(!is.na(enrolled_date), test_type_3 == 'ЕГЭ') %>%
+  group_by(direction, education_source, test_subject_3) %>%
+  summarise(
+    n = n(),
+    mean_ege = round(mean(mark_3, na.rm = T), 2)
+  )
+
+f_6_1 <- entrant_applications %>%
+  group_by(direction) %>%
+  summarise(
+    distinct = n_distinct(application_number)
+  )
+
+# entrant_applications$source <- as.factor(entrant_applications$source)
 print('По специальностям и источникам подачи - всего')
 entrant_applications %>% group_by(direction, source) %>% summarise(n = n())
 print('По специальностям и источникам подачи - бюджет')
