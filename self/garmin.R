@@ -1,7 +1,8 @@
 library(tidyverse)
 library(jsonlite)
 
-df <- fromJSON('/home/markovnin/weight.json')
+df <- fromJSON('/home/markovnin/weight_.json')
+
 df$muscleMass <- df$muscleMass/1000
 df$weight <- df$weight/1000
 df$date <- as.Date(df$date)
