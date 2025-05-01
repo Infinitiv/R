@@ -14,24 +14,26 @@ entrant_applications <- entrant_applications %>%
          mean_ege = round(sum_ege/ege_count, 2), 
          sum_exam = sum - sum_ege,
          exam_count = test_count - ege_count,
-         mean_exam = round(sum_exam/exam_count, 2))
-
-entrant_applications <- entrant_applications %>%
-  mutate(basis = ifelse(education_source == 'По договору об оказании платных образовательных услуг', 'Внебюджет', 'Бюджет'))
-
-enrolled <- entrant_applications %>%
-  filter(!is.na(enrolled_date)) %>%
-  group_by(direction, basis) %>%
-  summarise(n = n())
+         mean_exam = round(sum_exam/exam_count, 2),
+         basis = ifelse(education_source == 'По договору об оказании платных образовательных услуг', 'Внебюджет', 'Бюджет'),
+         education_level = ifelse(direction == 'Сестринское дело', 'Бакалавриат', 'Специалитет')
+         )
 
 vpo_1_2_1_1_min <- entrant_applications %>%
   filter(!is.na(enrolled_date)) %>%
   group_by(direction, education_source) %>%
   summarise(
-    min_1 = min(ifelse(test_type_1 == 'ЕГЭ', mark_1, NA), na.rm = TRUE),
-    min_2 = min(ifelse(test_type_1 == 'ЕГЭ', mark_2, NA), na.rm = TRUE),
-    min_3 = min(ifelse(test_type_1 == 'ЕГЭ', mark_3, NA), na.rm = TRUE),
-    mean = sum(c(min_1, min_2, min_3))/3
+    min_1 = min(mark_1, na.rm = TRUE),
+    min_2 = min(mark_2, na.rm = TRUE),
+    min_3 = min(mark_3, na.rm = TRUE),
+    mean = round(sum(c(min_1, min_2, min_3))/3, 1)
+  )
+
+vpo_1_2_1_1_mean <-entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(direction, education_source) %>%
+  summarise(
+    mean = round(mean(mean, na.rm = T), 1)
   )
 
 vpo_2_3 <- entrant_applications %>%
@@ -39,33 +41,135 @@ vpo_2_3 <- entrant_applications %>%
   group_by(competitive_group_name) %>%
   summarise(n = n())
 
-vpo_2_8_sum <- entrant_applications %>%
-  filter(!is.na(enrolled_date), direction != 'Сестринское дело', nationality != 'РОССИЯ') %>%
-  summarise(
-    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
-    count_college = sum(grepl('диплом', education_document, ignore.case = T))
-  )
-
-vpo_2_8_sum <- entrant_applications %>%
-  filter(!is.na(enrolled_date), direction == 'Сестринское дело', nationality != 'РОССИЯ') %>%
-  summarise(
-    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
-    count_college = sum(grepl('диплом', education_document, ignore.case = T))
-  )
-
 vpo_2_8 <- entrant_applications %>%
-  filter(!is.na(enrolled_date), direction == 'Сестринское дело', education_document_date > as.Date('2023-10-01')) %>%
+  group_by(education_level, basis) %>%
   summarise(
     count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
-    count_college = sum(grepl('диплом', education_document, ignore.case = T))
+    count_school_last = sum(grepl('аттестат', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)),
+    count_college_last = sum(grepl('диплом о среднем', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_bac = sum(grepl('диплом бакалавра', education_document, ignore.case = T)),
+    count_bac_last = sum(grepl('диплом бакалавра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_mag = sum(grepl('диплом магистра', education_document, ignore.case = T)),
+    count_mag_last = sum(grepl('диплом магистра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_spec = sum(grepl('диплом специалиста', education_document, ignore.case = T)),
+    count_spec_last = sum(grepl('диплом специалиста', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
   )
 
-vpo_2_8 <- entrant_applications %>%
-  filter(!is.na(enrolled_date), direction != 'Сестринское дело', education_document_date > as.Date('2023-10-01'), nationality != 'РОССИЯ') %>%
+vpo_2_8_foreign <- entrant_applications %>%
+  filter(!grepl('россия', nationality, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
   summarise(
     count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
-    count_college = sum(grepl('диплом', education_document, ignore.case = T))
+    count_school_last = sum(grepl('аттестат', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)),
+    count_college_last = sum(grepl('диплом о среднем', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_bac = sum(grepl('диплом бакалавра', education_document, ignore.case = T)),
+    count_bac_last = sum(grepl('диплом бакалавра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_mag = sum(grepl('диплом магистра', education_document, ignore.case = T)),
+    count_mag_last = sum(grepl('диплом магистра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_spec = sum(grepl('диплом специалиста', education_document, ignore.case = T)),
+    count_spec_last = sum(grepl('диплом специалиста', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
   )
+
+vpo_2_8_enrolled <- entrant_applications %>%
+  filter(!is.na(enrolled_date)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_school_last = sum(grepl('аттестат', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)),
+    count_college_last = sum(grepl('диплом о среднем', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_bac = sum(grepl('диплом бакалавра', education_document, ignore.case = T)),
+    count_bac_last = sum(grepl('диплом бакалавра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_mag = sum(grepl('диплом магистра', education_document, ignore.case = T)),
+    count_mag_last = sum(grepl('диплом магистра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_spec = sum(grepl('диплом специалиста', education_document, ignore.case = T)),
+    count_spec_last = sum(grepl('диплом специалиста', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+  )
+
+vpo_2_8_enrolled_foreign <- entrant_applications %>%
+  filter(!is.na(enrolled_date), !grepl('россия', nationality, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    count_school = sum(grepl('аттестат', education_document, ignore.case = T)),
+    count_school_last = sum(grepl('аттестат', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_college = sum(grepl('диплом о среднем', education_document, ignore.case = T)),
+    count_college_last = sum(grepl('диплом о среднем', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_bac = sum(grepl('диплом бакалавра', education_document, ignore.case = T)),
+    count_bac_last = sum(grepl('диплом бакалавра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_mag = sum(grepl('диплом магистра', education_document, ignore.case = T)),
+    count_mag_last = sum(grepl('диплом магистра', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+    count_spec = sum(grepl('диплом специалиста', education_document, ignore.case = T)),
+    count_spec_last = sum(grepl('диплом специалиста', education_document, ignore.case = T) & education_document_date > as.Date('2023-10-01')),
+  )
+
+vpo_2_9_first <- entrant_applications %>%
+  filter(!grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    count_ege = sum(test_type == 'ЕГЭ', na.rm = T),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ', na.rm = T),
+    count_exam = sum(test_type == 'ВИ', na.rm = T),
+    count_examless = sum(examless_type == 'БВИ', na.rm = T),
+    count_special = sum(grepl('особая', competitive_group_name, ignore.case = T)),
+    count_orphan = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('сирот', benefit_documents, ignore.case = T)),
+    count_disabled = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('инвалид', benefit_documents, ignore.case = T)),
+    count_separate = sum(grepl('отдельная', competitive_group_name, ignore.case = T)),
+    count_svo = sum(grepl('отдельная', competitive_group_name, ignore.case = T) & grepl('СВО', benefit_documents)),
+    count_target = sum(grepl('целевая', competitive_group_name, ignore.case = T)),
+    count_common = sum(grepl('КЦП|платн', competitive_group_name)),
+  )
+
+vpo_2_9_second <- entrant_applications %>%
+  filter(grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    n = n()
+  )
+
+vpo_2_9_first_enrolled <- entrant_applications %>%
+  filter(!is.na(enrolled_date), !grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    count_ege = sum(test_type == 'ЕГЭ'),
+    count_ege_exam = sum(test_type == 'ЕГЭ+ВИ'),
+    count_exam = sum(test_type == 'ВИ'),
+    count_examless = sum(examless_type == 'БВИ'),
+    count_special = sum(grepl('особая', competitive_group_name, ignore.case = T)),
+    count_special_pref = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('преимущ', benefits, ignore.case = T)),
+    count_orphan = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('сирот', benefit_documents, ignore.case = T)),
+    count_orphan_pref = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('сирот', benefit_documents, ignore.case = T) & grepl('преимущ', benefits, ignore.case = T)),
+    count_disabled = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('инвалид', benefit_documents, ignore.case = T)),
+    count_disabled_pref = sum(grepl('особая', competitive_group_name, ignore.case = T) & grepl('инвалид', benefit_documents, ignore.case = T) & grepl('преимущ', benefits, ignore.case = T)),
+    count_separate = sum(grepl('отдельная', competitive_group_name, ignore.case = T)),
+    count_separate_pref = sum(grepl('отдельная', competitive_group_name, ignore.case = T) & grepl('преимущ', benefits, ignore.case = T)),
+    count_svo = sum(grepl('отдельная', competitive_group_name, ignore.case = T) & grepl('СВО', benefit_documents)),
+    count_svo_pref = sum(grepl('отдельная', competitive_group_name, ignore.case = T) & grepl('СВО', benefit_documents) & grepl('преимущ', benefits, ignore.case = T)),
+    count_target = sum(grepl('целевая', competitive_group_name, ignore.case = T)),
+    count_target_pref = sum(grepl('целевая', competitive_group_name, ignore.case = T) & grepl('преимущ', benefits, ignore.case = T)),
+    count_common = sum(grepl('КЦП|платн', competitive_group_name)),
+    count_common_pref = sum(grepl('КЦП|платн', competitive_group_name) & grepl('преимущ', benefits, ignore.case = T)),
+  )
+
+vpo_2_9_second_enrolled <- entrant_applications %>%
+  filter(!is.na(enrolled_date), grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis) %>%
+  summarise(
+    n = n()
+  )
+
+vpo_2_10 <- entrant_applications %>%
+  filter(grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis, education_document, nationality) %>%
+  summarise(
+    n = n()
+  )
+
+entrant_applications %>% 
+  filter(!grepl('диплом бакалавра|диплом магистра|диплом специалиста', education_document, ignore.case = T)) %>%
+  group_by(education_level, basis, test_type) %>% 
+  summarise(n = n())
 
 f_2_1 <- entrant_applications %>%
   group_by(direction, basis) %>%
