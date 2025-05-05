@@ -13,6 +13,10 @@ PROCESSED_DIR <- file.path(DATA_DIR, "processed")
 RESULTS_DIR <- file.path(DATA_DIR, "results")
 TABLES_DIR <- file.path(RESULTS_DIR, "tables")
 FIGURES_DIR <- file.path(RESULTS_DIR, "figures")
+ANALYSIS_DIR <- "~/R/gostuhina/analysis"
+
+# Source functions
+source(file.path(ANALYSIS_DIR, "functions.R"))
 
 # Read processed data
 data_clinical <- read_csv(file.path(PROCESSED_DIR, "data_clinical.csv"))
@@ -32,73 +36,45 @@ data_clinical <- data_clinical %>%
   mutate(Пол = factor(Пол, levels = c("Male", "Female"))) %>%
   mutate(group = factor(group))
 
-first_celiac <- data_clinical %>%
-  filter(`Впервые выставленная целиакия` == 'Yes')
+# List of symptoms to test
+symptoms <- c("Боль в животе", "Вздутие живота", "Тошнота",
+             "Рвота", "Другие проявления рефлюкса", "Диарея", "Полифекалия",
+             "Запор", "Неустойчивый стул", "Недостаточность питания",
+             "Задержка роста", "Ожирение", "Стоматит",
+             "Кариес, темный налет на зубах", "Атопический дерматит",
+             "Псориаз", "Герпетиформный дерматит", "Другие дерматиты", 
+             "Слабость, снижение аппетита", "Алопеция", "Частые ОРВИ",
+             "Боли в суставах")
 
-# Create age distribution plot
-age_distribution <- first_celiac %>%
-  count(Возраст) %>%
-  rename(age = Возраст, count = n) %>%
-  mutate(percentage = (count / sum(count) * 100)) %>%
-  mutate(percentage_label = sprintf("%.1f%%", percentage))
+# Calculate frequencies for all symptoms
+frequency <- map_dfr(symptoms, ~calculate_frequencies(data_clinical, .x))
 
-# Create age distribution plot
-age_plot <- ggplot(age_distribution, aes(x = age, y = percentage)) +
-  geom_bar(stat = "identity", fill = "grey70") +
-  geom_text(aes(label = percentage_label), vjust = -0.5, size = 3.5) +
-  scale_x_continuous(breaks = seq(0, max(age_distribution$age), by = 1)) +
-  scale_y_continuous(limits = c(0, max(age_distribution$percentage) + 2), 
-                    breaks = seq(0, ceiling(max(age_distribution$percentage)), by = 5)) +
-  labs(
-    title = "Распределение пациентов с впервые выявленной целиакией по возрасту",
-    x = "Возраст, лет",
-    y = "Доля детей, %"
-  ) +
-  theme_minimal() +
-  theme(
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    plot.title = element_text(size = 11),
-    axis.title = element_text(size = 10)
-  )
+# Calculate frequencies for all symptoms by age groups
+frequencies_by_age <- map_dfr(symptoms, ~calculate_frequencies_by_age(data_clinical, .x))
 
-# Save the plot as PNG
-ggsave(
-  filename = file.path(FIGURES_DIR, "age_distribution.png"),
-  plot = age_plot,
-  width = 10,
-  height = 6,
-  dpi = 300
-)
+# Perform Fisher test for each symptom
+fisher_results <- map_dfr(symptoms, ~perform_fisher_test(data_clinical, .x)) %>%
+  arrange(p_value)
 
-# Calculate frequency by age group
-age_group_frequency <- first_celiac %>%
-  group_by(age_group) %>%
-  summarise(
-    total = n(),
-    frequency = round(total / length(first_celiac$group) * 100, 1)
-  ) %>%
+# Perform Fisher test for each symptom by age groups
+fisher_results_by_age <- map_dfr(symptoms, ~perform_fisher_test_by_age(data_clinical, .x))
+
+# Filter significant results and create formatted table
+significant_symptoms <- fisher_results %>%
+  filter(p_value < 0.05) %>%
   mutate(
-    frequency_label = sprintf("%.1f%%", frequency)
-  )
-
-# Create publication-ready frequency table
-freq_table <- age_group_frequency %>%
-  select(age_group, total, frequency_label) %>%
-  rename(
-    "Возрастная группа" = age_group,
-    "Всего детей" = total,
-    "Частота, %" = frequency_label
+    p_value = ifelse(p_value < 0.0001,
+                     sprintf("%.2e", p_value),
+                     sprintf("%.4f", p_value))
   ) %>%
   gt() %>%
   tab_header(
-    title = "Распределение целиакии по возрастным группам",
-    subtitle = "Частота встречаемости впервые выявленной целиакии"
+    title = "Различия в частоте симптомов в группах пациентов с целиакией и без",
+    subtitle = "Представлены симптомы, для которых выявлены статистически значимые различия (p < 0.05)"
   ) %>%
-  fmt_number(
-    columns = "Всего детей",
-    decimals = 0,
-    use_seps = TRUE
+  cols_label(
+    Симптом = "Симптом",
+    p_value = "Значение p"
   ) %>%
   tab_style(
     style = list(
@@ -124,66 +100,8 @@ freq_table <- age_group_frequency %>%
     table.font.size = "12px"
   )
 
-# Save table as HTML and PNG
-gtsave(freq_table, 
-       filename = file.path(TABLES_DIR, "celiac_frequency_by_age.html"))
-
-freq_table %>%
-  gtsave(
-    filename = file.path(TABLES_DIR, "celiac_frequency_by_age.png")
-  )
-
-# List of symptoms to test
-symptoms <- c("Боль в животе", "Вздутие живота", "Тошнота",
-             "Рвота", "Другие проявления рефлюкса", "Диарея", "Полифекалия",
-             "Запор", "Неустойчивый стул", "Недостаточность питания",
-             "Задержка роста", "Ожирение", "Стоматит",
-             "Кариес, темный налет на зубах", "Атопический дерматит",
-             "Псориаз", "Герпетиформный дерматит", "Другие дерматиты", 
-             "Слабость, снижение аппетита", "Алопеция", "Частые ОРВИ",
-             "Боли в суставах")
-
-# Function to calculate frequencies and perform Fisher test for each symptom
-calculate_frequencies <- function(data, symptom) {
-  freq <- data %>%
-    group_by(age_group, group) %>%
-    summarise(
-      Symptom = symptom,
-      n = n(),
-      cases = sum(!!sym(symptom) == "Yes"),
-      percentage = sprintf("%.1f%%", (cases/n) * 100),
-      .groups = "drop"
-    )
-}
-
-perform_fisher_test <- function(data, symptom) {
-  p_values <- data %>%
-    group_by(age_group) %>%
-    summarise(
-      p_value = fisher.test(!!sym(symptom), group)$p.value,
-      .groups = "drop"
-    ) %>%
-    pivot_wider(
-      names_from = age_group,
-      values_from = p_value,
-      names_prefix = "group_"
-    )
-
-  # Return results
-  data.frame(
-    Симптом = symptom,
-    p_values
-  )
-}
-
-# Calculate frequencies for all symptoms
-frequencies <- map_dfr(symptoms, ~calculate_frequencies(data_clinical, .x))
-
-# Perform Fisher test for each symptom
-fisher_results <- map_dfr(symptoms, ~perform_fisher_test(data_clinical, .x))
-
-# Filter significant results and create formatted table
-significant_symptoms <- fisher_results %>%
+# Filter significant results and create formatted table by age groups
+significant_symptoms_by_age <- fisher_results_by_age %>%
   filter(
     if_any(
       c(group_1.2.года, group_3.7.лет, group_8.11.лет,
@@ -193,8 +111,10 @@ significant_symptoms <- fisher_results %>%
   mutate(
     across(starts_with("group_"),
            ~ifelse(. < 0.05,
-                   sprintf("%.7f", .),
-                   "Не значимо"))
+                  ifelse(. < 0.0001,
+                         sprintf("%.2e", .),
+                         sprintf("%.4f", .)),
+                  "Не значимо"))
   ) %>%
   gt() %>%
   tab_header(
@@ -232,10 +152,10 @@ significant_symptoms <- fisher_results %>%
     table.font.size = "12px"
   )
 
-significant_symptoms_list <- significant_symptoms$`_data`$Симптом
+significant_symptoms_list_by_age <- significant_symptoms_by_age$`_data`$Симптом
 
-significant_frequencies <- frequencies %>%
-  filter(Symptom %in% significant_symptoms_list) %>%
+significant_frequencies_by_age <- frequencies_by_age %>%
+  filter(Symptom %in% significant_symptoms_list_by_age) %>%
   gt() %>%
   tab_header(
     title = "Частота значимых симптомов между возрастными подгруппами в группах пациентов с целиакией и без",
@@ -273,21 +193,29 @@ significant_frequencies <- frequencies %>%
   )
 
 # Save results for p-values table
-gtsave(significant_symptoms, 
+gtsave(significant_symptoms_by_age, 
        filename = file.path(TABLES_DIR, "significant_symptoms_by_age.html"))
 
-significant_symptoms %>%
+significant_symptoms_by_age %>%
   gtsave(
     filename = file.path(TABLES_DIR, "significant_symptoms_by_age.png")
   )
 
+gtsave(significant_symptoms, 
+       filename = file.path(TABLES_DIR, "significant_symptoms.html"))
+
+significant_symptoms %>%
+  gtsave(
+    filename = file.path(TABLES_DIR, "significant_symptoms.png")
+  )
+
 # Save results for frequencies table
-gtsave(significant_frequencies,
-       filename = file.path(TABLES_DIR, "significant_frequencies.html"))
+gtsave(significant_frequencies_by_age,
+       filename = file.path(TABLES_DIR, "significant_frequencies_by_age.html"))
 
 # Save as PNG with specific dimensions for better readability
-gtsave(significant_frequencies,
-       filename = file.path(TABLES_DIR, "significant_frequencies.png"),
+gtsave(significant_frequencies_by_age,
+       filename = file.path(TABLES_DIR, "significant_frequencies_by_age.png"),
        vwidth = 1200,  # Increased width for better readability
        vheight = 800   # Adjusted height
 )
