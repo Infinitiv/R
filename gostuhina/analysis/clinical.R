@@ -8,29 +8,32 @@ library(gt)
 library(webshot2)
 
 # Define paths
-DATA_DIR <- "~/Yandex.Disk/data/gostuhina"
-PROCESSED_DIR <- file.path(DATA_DIR, "processed")
-RESULTS_DIR <- file.path(DATA_DIR, "results")
-TABLES_DIR <- file.path(RESULTS_DIR, "tables")
-FIGURES_DIR <- file.path(RESULTS_DIR, "figures")
-ANALYSIS_DIR <- "~/R/gostuhina/analysis"
+data_dir <- "~/Yandex.Disk/data/gostuhina"
+processed_dir <- file.path(data_dir, "processed")
+results_dir <- file.path(data_dir, "results")
+tables_dir <- file.path(results_dir, "tables")
+figures_dir <- file.path(results_dir, "figures")
+analysis_dir <- "~/R/gostuhina/analysis"
 
 # Source functions
-source(file.path(ANALYSIS_DIR, "functions.R"))
+source(file.path(analysis_dir, "functions.R"))
 
 # Read processed data
-data_clinical <- read_csv(file.path(PROCESSED_DIR, "data_clinical.csv"))
+data_clinical <- read_csv(file.path(processed_dir, "data_clinical.csv"))
 
 data_clinical <- data_clinical %>%
-  mutate(age_group = factor(age_group, 
-                          levels = c("1-2 года", "3-7 лет", "8-11 лет", "12-17 лет"),
-                          ordered = TRUE)) %>%
-  mutate(across(c(`Впервые выставленная целиакия`, `Боль в животе`, `Вздутие живота`, Тошнота,
+  mutate(age_group = factor(age_group,
+                            levels = c("1-2 года", "3-7 лет",
+                                       "8-11 лет", "12-17 лет"),
+                            ordered = TRUE)) %>%
+  mutate(across(c(`Впервые выставленная целиакия`, `Боль в животе`,
+                  `Вздутие живота`, Тошнота,
                   Рвота, `Другие проявления рефлюкса`, Диарея, Полифекалия,
                   Запор, `Неустойчивый стул`, `Недостаточность питания`,
                   `Задержка роста`, Ожирение, Стоматит,
                   `Кариес, темный налет на зубах`, `Атопический дерматит`,
-                  Псориаз, `Герпетиформный дерматит`, `Другие дерматиты`, `Слабость, снижение аппетита`, Алопеция, `Частые ОРВИ`,
+                  Псориаз, `Герпетиформный дерматит`, `Другие дерматиты`,
+                  `Слабость, снижение аппетита`, Алопеция, `Частые ОРВИ`,
                   `Боли в суставах`),
                 ~factor(., levels = c("No", "Yes")))) %>%
   mutate(Пол = factor(Пол, levels = c("Male", "Female"))) %>%
@@ -38,13 +41,13 @@ data_clinical <- data_clinical %>%
 
 # List of symptoms to test
 symptoms <- c("Боль в животе", "Вздутие живота", "Тошнота",
-             "Рвота", "Другие проявления рефлюкса", "Диарея", "Полифекалия",
-             "Запор", "Неустойчивый стул", "Недостаточность питания",
-             "Задержка роста", "Ожирение", "Стоматит",
-             "Кариес, темный налет на зубах", "Атопический дерматит",
-             "Псориаз", "Герпетиформный дерматит", "Другие дерматиты", 
-             "Слабость, снижение аппетита", "Алопеция", "Частые ОРВИ",
-             "Боли в суставах")
+              "Рвота", "Другие проявления рефлюкса", "Диарея", "Полифекалия",
+              "Запор", "Неустойчивый стул", "Недостаточность питания",
+              "Задержка роста", "Ожирение", "Стоматит",
+              "Кариес, темный налет на зубах", "Атопический дерматит",
+              "Псориаз", "Герпетиформный дерматит", "Другие дерматиты",
+              "Слабость, снижение аппетита", "Алопеция", "Частые ОРВИ",
+              "Боли в суставах")
 
 # Calculate frequencies for all symptoms
 frequency <- map_dfr(symptoms, ~calculate_frequencies(data_clinical, .x))
@@ -111,10 +114,10 @@ significant_symptoms_by_age <- fisher_results_by_age %>%
   mutate(
     across(starts_with("group_"),
            ~ifelse(. < 0.05,
-                  ifelse(. < 0.0001,
-                         sprintf("%.2e", .),
-                         sprintf("%.4f", .)),
-                  "Не значимо"))
+                   ifelse(. < 0.0001,
+                          sprintf("%.2e", .),
+                          sprintf("%.4f", .)),
+                   "Не значимо"))
   ) %>%
   gt() %>%
   tab_header(
@@ -193,29 +196,29 @@ significant_frequencies_by_age <- frequencies_by_age %>%
   )
 
 # Save results for p-values table
-gtsave(significant_symptoms_by_age, 
-       filename = file.path(TABLES_DIR, "significant_symptoms_by_age.html"))
+gtsave(significant_symptoms_by_age,
+       filename = file.path(tables_dir, "significant_symptoms_by_age.html"))
 
 significant_symptoms_by_age %>%
   gtsave(
-    filename = file.path(TABLES_DIR, "significant_symptoms_by_age.png")
+    filename = file.path(tables_dir, "significant_symptoms_by_age.png")
   )
 
-gtsave(significant_symptoms, 
-       filename = file.path(TABLES_DIR, "significant_symptoms.html"))
+gtsave(significant_symptoms,
+       filename = file.path(tables_dir, "significant_symptoms.html"))
 
 significant_symptoms %>%
   gtsave(
-    filename = file.path(TABLES_DIR, "significant_symptoms.png")
+    filename = file.path(tables_dir, "significant_symptoms.png")
   )
 
 # Save results for frequencies table
 gtsave(significant_frequencies_by_age,
-       filename = file.path(TABLES_DIR, "significant_frequencies_by_age.html"))
+       filename = file.path(tables_dir, "significant_frequencies_by_age.html"))
 
 # Save as PNG with specific dimensions for better readability
 gtsave(significant_frequencies_by_age,
-       filename = file.path(TABLES_DIR, "significant_frequencies_by_age.png"),
-       vwidth = 1200,  # Increased width for better readability
-       vheight = 800   # Adjusted height
+  filename = file.path(tables_dir, "significant_frequencies_by_age.png"),
+  vwidth = 1200,  # Increased width for better readability
+  vheight = 800   # Adjusted height
 )

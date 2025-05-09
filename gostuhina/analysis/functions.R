@@ -6,7 +6,7 @@ library(tidyverse)
 
 # Function to calculate frequencies
 calculate_frequencies <- function(data, symptom) {
-  freq <- data %>%
+  data %>%
     group_by(group) %>%
     summarise(
       Symptom = symptom,
@@ -19,7 +19,7 @@ calculate_frequencies <- function(data, symptom) {
 
 # Function to calculate frequencies by age group
 calculate_frequencies_by_age <- function(data, symptom) {
-  freq <- data %>%
+  fdata %>%
     group_by(age_group, group) %>%
     summarise(
       Symptom = symptom,
@@ -61,7 +61,7 @@ perform_fisher_test_by_age <- function(data, symptom) {
     ) %>%
     pivot_wider(
       names_from = age_group,
-      values_from = p_value,
+      values_from = p_values,
       names_prefix = "group_"
     )
 
