@@ -71,3 +71,40 @@ perform_fisher_test_by_age <- function(data, symptom) {
     p_values
   )
 }
+
+conf_matrix <- function(data, test) {
+  matrix <- confusionMatrix(
+    factor(data[[test]]), 
+    factor(data$prognoz), 
+    positive = "1"
+  )
+  data.frame(
+    Test = test,
+    Sensitivity = matrix$byClass["Sensitivity"],
+    Specificity = matrix$byClass["Specificity"],
+    posPredValue = matrix$byClass["Pos Pred Value"],
+    negPredValue = matrix$byClass["Neg Pred Value"]
+  )
+}
+
+descriptive_by_age <- function(data, test) {
+  descriptive <- data %>%
+  filter(`Впервые выставленная целиакия` == "Yes") %>%
+  group_by(age_group) %>%
+  summarise(
+    n = n(),
+    median = median(!!sym(test), na.rm = T),
+    q1 = quantile(!!sym(test), 0.25, na.rm = T),
+    q3 = quantile(!!sym(test), 0.75, na.rm = T),
+    mean = mean(!!sym(test), na.rm = T),
+    se = mean / sqrt(n),
+    median_quantilies = sprintf("%.1f [%.1f-%.1f]", median, q1, q3),
+    mean_se = sprintf("%.2f ± %.2f", mean, se)
+  ) %>%
+  select(age_group, n, median_quantilies, mean_se)
+  
+  data.frame(
+    Test = test,
+    descriptive
+  )
+}

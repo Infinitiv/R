@@ -90,7 +90,7 @@ data_diagnostic <- data_clean %>%
          `IgA ТТг <10`, `IgG ТТг <10`, 
          `IgA к глиадину <12.5`, `IgG к глиадину <12.5`,
          `IgA к ДПГ <10`, `IgG к ДПГ <10`,
-         `Степень атрофии по Marsh`)
+         `Степень атрофии по Marsh`, `Впервые выставленная целиакия`)
 
 # 2. Clinical symptoms (replace NA with "No" as absence of symptom)
 data_clinical <- data_clean %>%
@@ -130,13 +130,3 @@ write_csv(data_clean, file.path(PROCESSED_DIR, "data_clean.csv"))
 write_csv(data_diagnostic, file.path(PROCESSED_DIR, "data_diagnostic.csv"))
 write_csv(data_clinical, file.path(PROCESSED_DIR, "data_clinical.csv"))
 write_csv(data_lab, file.path(PROCESSED_DIR, "data_lab.csv"))
-
-# Display summaries of prepared data
-cat("\nDiagnostic Data Summary:\n")
-summary(data_diagnostic)
-
-cat("\nClinical Data Summary:\n")
-summary(data_clinical)
-
-cat("\nLaboratory Data Summary:\n")
-summary(data_lab)
