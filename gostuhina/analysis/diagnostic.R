@@ -91,16 +91,6 @@ tests_by_age_table <- tests_by_age %>%
 gtsave(tests_by_age_table, 
        filename = file.path(tables_dir, "tests_by_age_table.html"))
 
-
-data_diagnostic %>%
-  filter(`Впервые выставленная целиакия` == "Yes") %>%
-  { cor.test(
-      as.numeric(.$`IgA ТТг <10`), 
-      as.numeric(.$`IgG ТТг <10`), 
-      method = "spearman", 
-      use = "complete.obs"
-    ) }
-
 # Create the plot and assign to a variable
 plot_celiac <- data_diagnostic %>%
   filter(`Впервые выставленная целиакия` == "Yes") %>%
@@ -136,5 +126,19 @@ fit_marsh <- glm(prognoz_marsh ~ `IgA ТТг <10`, data = data_first_time_celiac
 roc_obj <- roc(data_first_time_celiac$prognoz_marsh, predict(fit_marsh, type = "response"))
 plot(roc_obj)
 auc(roc_obj)
-coords(roc_obj, "best", ret = c("threshold", "sensitivity", "specificity"))
-predict(fit_marsh, type = "response")
+
+data_first_time_celiac %>%
+  { cor.test(
+    as.numeric(.$`IgA ТТг <10`), 
+    as.numeric(.$`IgG ТТг <10`), 
+    method = "spearman", 
+    use = "complete.obs"
+  ) }
+
+data_diagnostic %>%
+  { cor.test(
+    as.numeric(.$`IgA ТТг <10`), 
+    as.numeric(.$`IgG ТТг <10`), 
+    method = "spearman", 
+    use = "complete.obs"
+  ) }
