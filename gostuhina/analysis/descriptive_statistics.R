@@ -32,7 +32,7 @@ data_descriptive <- data_clinical %>%
                                                 levels = c("Yes", "No")))
 
 descriptive_by_age <- data_descriptive %>%
-  group_by(group) %>%
+  group_by(group, age_group) %>%
   summarise(
     n = n(),
     median = median(Возраст),
@@ -43,7 +43,9 @@ descriptive_by_age <- data_descriptive %>%
     median_quantilies = sprintf("%.1f [%.1f-%.1f]", median, q1, q3),
     mean_se = sprintf("%.2f ± %.2f", mean, se)
     ) %>%
-  select(group, n, median_quantilies, mean_se)
+  mutate(percentage = n / sum(n) * 100) %>%
+  mutate(percentage = sprintf("%.1f%%", percentage)) %>%
+  select(group, age_group, n, percentage, median_quantilies, mean_se)
 
 sprintf("%.6f", wilcox.test(Возраст ~ group, data = data_descriptive)$p.value)
 # t.test(Возраст ~ group, data = data_descriptive)
@@ -166,7 +168,5 @@ freq_table <- age_group_frequency %>%
 gtsave(freq_table, 
        filename = file.path(TABLES_DIR, "celiac_frequency_by_age.html"))
 
-freq_table %>%
-  gtsave(
-    filename = file.path(TABLES_DIR, "celiac_frequency_by_age.png")
-  )
+fisher.test(first_celiac$age_group, first_celiac$Пол)
+

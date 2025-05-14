@@ -5,7 +5,6 @@
 library(tidyverse)
 library(ggplot2)
 library(gt)
-library(webshot2)
 
 # Define paths
 DATA_DIR <- "~/Yandex.Disk/data/gostuhina"
@@ -59,7 +58,8 @@ significant_tests <- fisher_results %>%
     p_value = ifelse(p_value < 0.0001,
                      sprintf("%.2e", p_value),
                      sprintf("%.4f", p_value))
-  ) %>%
+  ) 
+significant_tests_table <- significant_tests %>%
   gt() %>%
   tab_header(
     title = "Различия в частоте показателей в группах пациентов с целиакией и без",
@@ -108,7 +108,8 @@ significant_tests_by_age <- fisher_results_by_age %>%
                          sprintf("%.2e", .),
                          sprintf("%.4f", .)),
                   "Не значимо"))
-  ) %>%
+  ) 
+significant_tests_by_age_table <- significant_tests_by_age %>%
   gt() %>%
   tab_header(
     title = "Различия в частоте показателей между возрастными подгруппами в группах пациентов с целиакией и без",
@@ -145,10 +146,11 @@ significant_tests_by_age <- fisher_results_by_age %>%
     table.font.size = "12px"
   )
 
-significant_tests_list_by_age <- significant_tests_by_age$`_data`$Симптом
+significant_tests_list_by_age <- significant_tests_by_age_table$`_data`$Симптом
 
 significant_frequencies_of_tests_by_age <- frequencies_by_age %>%
-  filter(Symptom %in% significant_tests_list_by_age) %>%
+  filter(Symptom %in% significant_tests_list_by_age) 
+significant_frequencies_of_tests_by_age_table <- significant_frequencies_of_tests_by_age %>%
   gt() %>%
   tab_header(
     title = "Частота значимых показателей между возрастными подгруппами в группах пациентов с целиакией и без",
@@ -185,30 +187,53 @@ significant_frequencies_of_tests_by_age <- frequencies_by_age %>%
     table.font.size = "12px"
   )
 
+frequency_table <- frequency %>%
+  gt() %>%
+  tab_header(
+    title = "Частота показателей в группах пациентов с целиакией и без",
+  ) %>%
+  cols_label(
+    group = "Группа",
+    Symptom = "Показатель",
+    count = "Количество анализов",
+    cases = "Положителен",
+    percentage = "Процент"
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "bottom",
+        weight = px(3)
+      )
+    ),
+    locations = cells_column_labels()
+  ) %>%
+  tab_options(
+    table.border.top.style = "hidden",
+    table.border.bottom.style = "hidden",
+    heading.title.font.size = "16px",
+    heading.subtitle.font.size = "14px",
+    column_labels.font.weight = "bold",
+    table.font.size = "12px"
+  )
+
 # Save results for p-values table
-gtsave(significant_tests_by_age, 
-       filename = file.path(TABLES_DIR, "significant_tests_by_age.html"))
+gtsave(significant_tests_by_age_table, 
+       filename = file.path(TABLES_DIR, "significant_tests_by_age_table.html"))
 
-significant_tests_by_age %>%
-  gtsave(
-    filename = file.path(TABLES_DIR, "significant_tests_by_age.png")
-  )
-
-gtsave(significant_tests, 
-       filename = file.path(TABLES_DIR, "significant_tests.html"))
-
-significant_tests %>%
-  gtsave(
-    filename = file.path(TABLES_DIR, "significant_tests.png")
-  )
+gtsave(significant_tests_table, 
+       filename = file.path(TABLES_DIR, "significant_tests_table.html"))
 
 # Save results for frequencies table
-gtsave(significant_frequencies_of_tests_by_age,
-       filename = file.path(TABLES_DIR, "significant_frequencies_of_tests_by_age.html"))
+gtsave(significant_frequencies_of_tests_by_age_table,
+       filename = file.path(TABLES_DIR, "significant_frequencies_of_tests_by_age_table.html"))
 
-# Save as PNG with specific dimensions for better readability
-gtsave(significant_frequencies_of_tests_by_age,
-       filename = file.path(TABLES_DIR, "significant_frequencies_of_tests_by_age.png"),
-       vwidth = 1200,  # Increased width for better readability
-       vheight = 800   # Adjusted height
-)
+# Save results for frequencies table
+gtsave(frequency_table,
+       filename = file.path(TABLES_DIR, "frequency_table.html"))

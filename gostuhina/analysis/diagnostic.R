@@ -33,7 +33,7 @@ data_diagnostic <- data_diagnostic %>%
     `DPG-IgG` = ifelse(`IgG к ДПГ <10`< 10, 0, 1),
     `Впервые выставленная целиакия` = factor(`Впервые выставленная целиакия`, levels = c("No", "Yes")),
     `Степень атрофии по Marsh` = factor(`Степень атрофии по Marsh`,
-                                               levels = c("норма", "0", "1", "2", "3A", "3B", "3C", "другое"))
+                                               levels = c("0", "1", "2", "3A", "3B", "3C"))
   )
 
 tests <- c(
@@ -117,13 +117,18 @@ ggsave(
 )
 
 data_first_time_celiac <- data_diagnostic %>%
-  filter(`Впервые выставленная целиакия` == "Yes") %>%
+  filter(`Впервые выставленная целиакия` == "Yes", !is.na(`Степень атрофии по Marsh`)) %>%
   mutate(
     prognoz_marsh = ifelse(grepl("3", `Степень атрофии по Marsh`), 1, 0)
   )
 
 fit_marsh <- glm(prognoz_marsh ~ `IgA ТТг <10`, data = data_first_time_celiac, family = "binomial")
 roc_obj <- roc(data_first_time_celiac$prognoz_marsh, predict(fit_marsh, type = "response"))
+plot(roc_obj)
+auc(roc_obj)
+
+fit_ttg <- glm(prognoz ~ `IgA ТТг <10`, data = data_diagnostic, family = "binomial")
+roc_obj <- roc(data_diagnostic$prognoz, predict(fit_ttg, type = "response"))
 plot(roc_obj)
 auc(roc_obj)
 
@@ -142,3 +147,49 @@ data_diagnostic %>%
     method = "spearman", 
     use = "complete.obs"
   ) }
+
+medians <- data_first_time_celiac %>%
+  group_by(`Степень атрофии по Marsh`) %>%
+  summarise(median_value = median(`IgA ТТг <10`, na.rm = TRUE))
+
+plot_box <- ggplot(data_first_time_celiac, aes(x = `Степень атрофии по Marsh`, y = `IgA ТТг <10`)) +
+  geom_boxplot(fill = "lightblue", color = "darkblue", outlier.colour = "red", outlier.shape = 16) +
+  geom_text(data = medians, aes(label = round(median_value, 1), y = median_value), 
+            vjust = -0.5, color = "black", size = 4) +
+  labs(
+    title = "IgA к tTG по степени атрофии по Marsh",
+    subtitle = "Только впервые выставленная целиакия",
+    x = "Степень атрофии по Marsh",
+    y = "IgA к tTG, Ед/мл"
+  ) +
+  theme_minimal(base_size = 14)
+
+ggsave("~/Yandex.Disk/data/gostuhina/results/figures/boxplot_marsh_iga.png", 
+       plot = plot_box, width = 10, height = 6, dpi = 300)
+
+# Kruskal-Wallis test
+kruskal_result <- kruskal.test(`IgA ТТг <10` ~ `Степень атрофии по Marsh`, data = data_first_time_celiac)
+kruskal_table <- tibble(
+  "Тест" = "Краскела-Уоллиса",
+  "p-значение" = format.pval(kruskal_result$p.value, digits = 4)
+) %>%
+  gt() %>%
+  tab_header(
+    title = "Результат теста Краскела-Уоллиса"
+  )
+gtsave(kruskal_table, 
+       filename = file.path(tables_dir, "kruskal_table.html"))
+
+# Pairwise Wilcoxon comparisons with Bonferroni adjustment
+pairwise_result <- pairwise.wilcox.test(data_first_time_celiac$`IgA ТТг <10`, data_first_time_celiac$`Степень атрофии по Marsh`,
+                                        p.adjust.method = "bonferroni")
+pairwise_table <- as.data.frame(pairwise_result$p.value) %>%
+  rownames_to_column(var = "Группа 1") %>%
+  pivot_longer(-`Группа 1`, names_to = "Группа 2", values_to = "p-значение") %>%
+  mutate(`p-значение` = ifelse(is.na(`p-значение`), "-", formatC(`p-значение`, format = "f", digits = 4))) %>%
+  gt() %>%
+  tab_header(
+    title = "Попарные сравнения (тест Вилкоксона с поправкой Бонферрони)"
+  )
+gtsave(pairwise_table, 
+       filename = file.path(tables_dir, "pairwise_table.html"))

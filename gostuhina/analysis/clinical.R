@@ -5,7 +5,6 @@
 library(tidyverse)
 library(ggplot2)
 library(gt)
-library(webshot2)
 
 # Define paths
 data_dir <- "~/Yandex.Disk/data/gostuhina"
@@ -69,7 +68,8 @@ significant_symptoms <- fisher_results %>%
     p_value = ifelse(p_value < 0.0001,
                      sprintf("%.2e", p_value),
                      sprintf("%.4f", p_value))
-  ) %>%
+  ) 
+significant_symptoms_table <- significant_symptoms %>%
   gt() %>%
   tab_header(
     title = "Различия в частоте симптомов в группах пациентов с целиакией и без",
@@ -118,7 +118,8 @@ significant_symptoms_by_age <- fisher_results_by_age %>%
                           sprintf("%.2e", .),
                           sprintf("%.4f", .)),
                    "Не значимо"))
-  ) %>%
+  ) 
+significant_symptoms_by_age_table <- significant_symptoms_by_age %>%
   gt() %>%
   tab_header(
     title = "Различия в частоте симптомов между возрастными подгруппами в группах пациентов с целиакией и без",
@@ -158,7 +159,9 @@ significant_symptoms_by_age <- fisher_results_by_age %>%
 significant_symptoms_list_by_age <- significant_symptoms_by_age$`_data`$Симптом
 
 significant_frequencies_by_age <- frequencies_by_age %>%
-  filter(Symptom %in% significant_symptoms_list_by_age) %>%
+  filter(Symptom %in% significant_symptoms_list_by_age)
+
+significant_frequencies_by_age_table <- significant_frequencies_by_age %>%
   gt() %>%
   tab_header(
     title = "Частота значимых симптомов между возрастными подгруппами в группах пациентов с целиакией и без",
@@ -196,29 +199,12 @@ significant_frequencies_by_age <- frequencies_by_age %>%
   )
 
 # Save results for p-values table
-gtsave(significant_symptoms_by_age,
-       filename = file.path(tables_dir, "significant_symptoms_by_age.html"))
+gtsave(significant_symptoms_by_age_table,
+       filename = file.path(tables_dir, "significant_symptoms_by_age_table.html"))
 
-significant_symptoms_by_age %>%
-  gtsave(
-    filename = file.path(tables_dir, "significant_symptoms_by_age.png")
-  )
-
-gtsave(significant_symptoms,
-       filename = file.path(tables_dir, "significant_symptoms.html"))
-
-significant_symptoms %>%
-  gtsave(
-    filename = file.path(tables_dir, "significant_symptoms.png")
-  )
+gtsave(significant_symptoms_table,
+       filename = file.path(tables_dir, "significant_symptoms_table.html"))
 
 # Save results for frequencies table
-gtsave(significant_frequencies_by_age,
-       filename = file.path(tables_dir, "significant_frequencies_by_age.html"))
-
-# Save as PNG with specific dimensions for better readability
-gtsave(significant_frequencies_by_age,
-  filename = file.path(tables_dir, "significant_frequencies_by_age.png"),
-  vwidth = 1200,  # Increased width for better readability
-  vheight = 800   # Adjusted height
-)
+gtsave(significant_frequencies_by_age_table,
+       filename = file.path(tables_dir, "significant_frequencies_by_age_table.html"))

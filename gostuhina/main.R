@@ -86,6 +86,7 @@ data_clean <- data %>%
 # Create analysis-ready datasets
 # 1. Diagnostic markers (complete cases only)
 data_diagnostic <- data_clean %>%
+  filter(`Дефицит IgA` == "No") %>%
   select(`Номер пациента`, group, Пол, Возраст, age_group,
          `IgA ТТг <10`, `IgG ТТг <10`, 
          `IgA к глиадину <12.5`, `IgG к глиадину <12.5`,

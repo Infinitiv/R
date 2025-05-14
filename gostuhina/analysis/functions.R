@@ -11,21 +11,23 @@ calculate_frequencies <- function(data, symptom) {
     summarise(
       Symptom = symptom,
       n = n(),
+      count = sum(!!sym(symptom) %in% c("Yes", "Abnormal")) + sum(!!sym(symptom) %in% c("No", "Normal")),
       cases = sum(!!sym(symptom) %in% c("Yes", "Abnormal")),
-      percentage = sprintf("%.1f%%", (cases/n) * 100),
+      percentage = sprintf("%.1f%%", (cases/count) * 100),
       .groups = "drop"
     )
 }
 
 # Function to calculate frequencies by age group
 calculate_frequencies_by_age <- function(data, symptom) {
-  fdata %>%
+  data %>%
     group_by(age_group, group) %>%
     summarise(
       Symptom = symptom,
       n = n(),
+      count = sum(!!sym(symptom) %in% c("Yes", "Abnormal")) + sum(!!sym(symptom) %in% c("No", "Normal")),
       cases = sum(!!sym(symptom) %in% c("Yes", "Abnormal")),
-      percentage = sprintf("%.1f%%", (cases/n) * 100),
+      percentage = sprintf("%.1f%%", (cases/count) * 100),
       .groups = "drop"
     )
 }
@@ -35,7 +37,7 @@ perform_fisher_test <- function(data, symptom) {
   p_values <- data %>%
     summarise(
       p_value = tryCatch(
-        fisher.test(!!sym(symptom) %in% c("Yes", "Abnormal"), group)$p.value,
+        fisher.test(!!sym(symptom), group)$p.value,
         error = function(e) NA_real_
       ),
       .groups = "drop"
@@ -54,14 +56,14 @@ perform_fisher_test_by_age <- function(data, symptom) {
     group_by(age_group) %>%
     summarise(
       p_value = tryCatch(
-        fisher.test(!!sym(symptom) %in% c("Yes", "Abnormal"), group)$p.value,
+        fisher.test(!!sym(symptom), group)$p.value,
         error = function(e) NA_real_
       ),
       .groups = "drop"
     ) %>%
     pivot_wider(
       names_from = age_group,
-      values_from = p_values,
+      values_from = p_value,
       names_prefix = "group_"
     )
 
