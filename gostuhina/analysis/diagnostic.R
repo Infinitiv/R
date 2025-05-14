@@ -33,7 +33,9 @@ data_diagnostic <- data_diagnostic %>%
     `DPG-IgG` = ifelse(`IgG к ДПГ <10`< 10, 0, 1),
     `Впервые выставленная целиакия` = factor(`Впервые выставленная целиакия`, levels = c("No", "Yes")),
     `Степень атрофии по Marsh` = factor(`Степень атрофии по Marsh`,
-                                               levels = c("0", "1", "2", "3A", "3B", "3C"))
+                                               levels = c("0", "1", "2", "3A", "3B", "3C")),
+    age_group = factor(age_group, levels = c("1-2 года", "3-7 лет", "8-11 лет", "12-17 лет"),
+                       ordered = TRUE)
   )
 
 tests <- c(
@@ -193,3 +195,26 @@ pairwise_table <- as.data.frame(pairwise_result$p.value) %>%
   )
 gtsave(pairwise_table, 
        filename = file.path(tables_dir, "pairwise_table.html"))
+
+kruskal.test(data_first_time_celiac$`IgA к глиадину <12.5`, data_first_time_celiac$age_group)
+pairwise.wilcox.test(data_first_time_celiac$`IgA ТТг <10`, data_first_time_celiac$age_group,
+                     p.adjust.method = "bonferroni")
+
+medians_age_group <- data_first_time_celiac %>%
+  group_by(age_group) %>%
+  summarise(median_value = median(`IgA ТТг <10`, na.rm = TRUE))
+
+age_group_plot_box <- ggplot(data_first_time_celiac, aes(x = age_group, y = `IgA ТТг <10`)) +
+  geom_boxplot(fill = "lightblue", color = "darkblue", outlier.colour = "red", outlier.shape = 16) +
+  geom_text(data = medians_age_group, aes(label = round(median_value, 1), y = median_value), 
+            vjust = -0.5, color = "black", size = 4) +
+  labs(
+    title = "IgA к tTG по возрасту",
+    subtitle = "Только впервые выставленная целиакия",
+    x = "Возраст",
+    y = "IgA к tTG, Ед/мл"
+  ) +
+  theme_minimal(base_size = 14)
+
+ggsave("~/Yandex.Disk/data/gostuhina/results/figures/boxplot_age_group.png", 
+       plot = age_group_plot_box, width = 10, height = 6, dpi = 300)
