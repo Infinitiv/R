@@ -38,6 +38,9 @@ data_diagnostic <- data_diagnostic %>%
                        ordered = TRUE)
   )
 
+data_diagnostic_marsh <- data_diagnostic %>%
+  filter(`Степень атрофии по Marsh` != '0')
+
 tests <- c(
   "tTG-IgA",
   "tTG-IgG",
@@ -218,3 +221,27 @@ age_group_plot_box <- ggplot(data_first_time_celiac, aes(x = age_group, y = `IgA
 
 ggsave("~/Yandex.Disk/data/gostuhina/results/figures/boxplot_age_group.png", 
        plot = age_group_plot_box, width = 10, height = 6, dpi = 300)
+
+data_first_time_celiac_marsh <- data_diagnostic_marsh %>%
+  filter(`Впервые выставленная целиакия` == "Yes", !is.na(`Степень атрофии по Marsh`)) %>%
+  mutate(
+    prognoz_marsh = ifelse(grepl("3", `Степень атрофии по Marsh`), 1, 0)
+  )
+medians <- data_first_time_celiac_marsh %>%
+  group_by(`Степень атрофии по Marsh`) %>%
+  summarise(median_value = median(`IgA ТТг <10`, na.rm = TRUE))
+
+plot_box_marsh <- ggplot(data_first_time_celiac_marsh, aes(x = `Степень атрофии по Marsh`, y = `IgA ТТг <10`)) +
+  geom_boxplot(fill = "lightblue", color = "darkblue", outlier.colour = "red", outlier.shape = 16) +
+  geom_text(data = medians, aes(label = round(median_value, 1), y = median_value), 
+            vjust = -0.5, color = "black", size = 4) +
+  labs(
+    title = "IgA к tTG по степени атрофии по Marsh",
+    subtitle = "Только впервые выставленная целиакия",
+    x = "Степень атрофии по Marsh",
+    y = "IgA к tTG, Ед/мл"
+  ) +
+  theme_minimal(base_size = 14)
+
+ggsave("~/Yandex.Disk/data/gostuhina/results/figures/boxplot_marsh_iga_2-3.png", 
+       plot = plot_box_marsh, width = 10, height = 6, dpi = 300)

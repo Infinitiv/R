@@ -93,6 +93,14 @@ data_diagnostic <- data_clean %>%
          `IgA к ДПГ <10`, `IgG к ДПГ <10`,
          `Степень атрофии по Marsh`, `Впервые выставленная целиакия`)
 
+data_diagnostic_iga <- data_clean %>%
+  filter(`Дефицит IgA` == "Yes") %>%
+  select(`Номер пациента`, group, Пол, Возраст, age_group,
+         `IgA ТТг <10`, `IgG ТТг <10`, 
+         `IgA к глиадину <12.5`, `IgG к глиадину <12.5`,
+         `IgA к ДПГ <10`, `IgG к ДПГ <10`,
+         `Степень атрофии по Marsh`, `Впервые выставленная целиакия`)
+
 # 2. Clinical symptoms (replace NA with "No" as absence of symptom)
 data_clinical <- data_clean %>%
   select(`Номер пациента`, group, Пол, Возраст, age_group,
@@ -129,5 +137,6 @@ data_lab <- data_clean %>%
 # Save prepared datasets
 write_csv(data_clean, file.path(PROCESSED_DIR, "data_clean.csv"))
 write_csv(data_diagnostic, file.path(PROCESSED_DIR, "data_diagnostic.csv"))
+write_csv(data_diagnostic_iga, file.path(PROCESSED_DIR, "data_diagnostic_iga.csv"))
 write_csv(data_clinical, file.path(PROCESSED_DIR, "data_clinical.csv"))
 write_csv(data_lab, file.path(PROCESSED_DIR, "data_lab.csv"))
